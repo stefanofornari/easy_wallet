@@ -1,1 +1,1 @@
-# easy_wallet
+A simple command-line application.
