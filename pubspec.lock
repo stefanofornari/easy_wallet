@@ -134,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
+  dart_web3:
+    dependency: "direct main"
+    description:
+      name: dart_web3
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   file:
     dependency: transitive
     description:
@@ -246,6 +253,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  mockito:
+    dependency: "direct dev"
+    description:
+      name: mockito
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.0"
   node_preamble:
     dependency: transitive
     description:
@@ -323,6 +337,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  source_gen:
+    dependency: transitive
+    description:
+      name: source_gen
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -428,13 +449,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  web3dart:
-    dependency: "direct dev"
-    description:
-      name: web3dart
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.3.3"
   web_socket_channel:
     dependency: transitive
     description:
