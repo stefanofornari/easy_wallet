@@ -1,17 +1,27 @@
 name: easy_wallet
-description: A simple command-line application.
+description: An easy crypto wallet magement tool
 version: 1.0.0
-# homepage: https://www.example.com
+
+#flutter:
+#  uses-material-design: true
 
 environment:
   sdk: '>=2.16.1 <3.0.0'
 
 dependencies:
+  http: ^0.13.4
   big_decimal: '>0.0.0'
   dart_web3: ^0.0.3
+  window_size:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
+      ref: 89c350f787e1d7bff12b3517e5671146211ee70e
 
 dev_dependencies:
-  http: ^0.13.4
+  flutter_test: 
+    sdk: flutter
+    version: ^0.0.0
   lints: ^1.0.0
   mockito: ^5.1.0
-  test: ^1.20.1
+  test:

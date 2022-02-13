@@ -16,7 +16,7 @@ void main() {
     EasyWallet w = EasyWallet("0x00000000219ab540356cBB839Cbe05303d7705Fa");
     expect(w.balance.toDouble(), 0.0);
 
-    expect(w.withBalance(BigDecimal.parse("10.0")), w);
+    w.balance = BigDecimal.parse("10.0");
     expect(w.balance.toDouble(), 10.0);
   });
 }
