@@ -14,13 +14,19 @@ class EasyWalletHomePage extends StatelessWidget {
       title: "EasyWallet",
       home: Scaffold(
         body: Center(
-          child: Column(
+          child: Wrap(
+            direction: Axis.vertical,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 15, 
             children: [
               Text("No wallets yet..."),
-              TextButton(
+              ElevatedButton(
                 key: KEY_ADD_WALLET,
-                child: const Text('+'),
-                onPressed: (){} 
+                child: const Text("➕"),
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),
+                ),
+                onPressed: (){ print ("pressed!"); } 
               )],
           ),
         ),

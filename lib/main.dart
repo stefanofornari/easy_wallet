@@ -10,8 +10,8 @@ void main() {
     final screen = window.screen;
     if (screen != null) {
       final screenFrame = screen.visibleFrame;
-      final width = math.max((screenFrame.width / 2).roundToDouble(), 800.0);
-      final height = math.max((screenFrame.height / 2).roundToDouble(), 600.0);
+      final width = math.max((screenFrame.width / 2).roundToDouble(), 600.0);
+      final height = math.max((screenFrame.height / 2).roundToDouble(), 400.0);
       final left = ((screenFrame.width - width) / 2).roundToDouble();
       final top = ((screenFrame.height - height) / 3).roundToDouble();
       final frame = Rect.fromLTWH(left, top, width, height);
