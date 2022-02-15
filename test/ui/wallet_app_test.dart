@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import "package:easy_wallet/resources/constants.dart";
 import 'package:easy_wallet/ui/wallet_app.dart';
 //import 'package:easy_wallet/wallet.dart';
 
@@ -8,8 +9,8 @@ void main() {
     testWidgets('show_main_window', (WidgetTester tester) async {
       await tester.pumpWidget(EasyWalletHomePage());
 
-
       expect(find.text("No wallets yet..."), findsWidgets);
+      expect(find.byKey(KEY_ADD_WALLET), findsOneWidget);
     });
   });
 }
