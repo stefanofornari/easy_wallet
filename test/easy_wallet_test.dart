@@ -12,7 +12,7 @@ void main() {
     expect(w.address, "0x00000000219ab540356cBB839Cbe05303d7705Fa");
   });
 
-  test('get_and_set_wallet_balance', () {
+  test('get and set wallet balance', () {
     EasyWallet w = EasyWallet("0x00000000219ab540356cBB839Cbe05303d7705Fa");
     expect(w.balance.toDouble(), 0.0);
 
