@@ -5,7 +5,7 @@ import 'package:easy_wallet/ui/wallet_app.dart';
 import 'package:window_size/window_size.dart';
 
 void main() {
-  runApp(const EasyWalletHomePage());
+  runApp(EasyWalletApp());
   getWindowInfo().then((window) {
     final screen = window.screen;
     if (screen != null) {
