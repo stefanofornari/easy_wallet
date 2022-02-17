@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import "package:easy_wallet/resources/constants.dart";
 import 'package:easy_wallet/ui/wallet_app.dart';
 //import 'package:easy_wallet/wallet.dart';
-
-RenderParagraph _getTextRenderObjectFromDialog(WidgetTester tester, String text) {
-  return tester.element<StatelessElement>(find.descendant(of: find.byType(Dialog), matching: find.text(text))).renderObject! as RenderParagraph;
-}
 
 void main() {
   testWidgets('empty home page', (WidgetTester tester) async {
@@ -37,7 +32,8 @@ void main() {
     await tester.tap(find.byKey(KEY_ADD_WALLET));
     await tester.pumpAndSettle();
     expect(find.byType(Dialog), findsOneWidget);
-    await tester.tap(find.descendant(of: find.byType(Dialog), matching: find.text("CANCEL")));
+    await tester.tap(find.descendant(
+        of: find.byType(Dialog), matching: find.text("CANCEL")));
     await tester.pumpAndSettle();
     expect(find.byType(Dialog), findsNothing);
   });
