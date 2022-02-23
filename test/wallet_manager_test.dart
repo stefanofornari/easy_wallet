@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 
 import 'package:big_decimal/big_decimal.dart';
-import 'package:easy_wallet/wallet.dart';
+import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/wallet_manager.dart';
 import 'package:http/http.dart';
 

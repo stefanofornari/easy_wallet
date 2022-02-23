@@ -37,4 +37,23 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(Dialog), findsNothing);
   });
+
+  testWidgets('invalid address invalidates ok button', (WidgetTester tester) async {
+    await tester.pumpWidget(EasyWalletApp());
+
+    await tester.tap(find.byKey(KEY_ADD_WALLET));
+    await tester.pumpAndSettle();
+    
+    /*
+    await tester.enterText(
+      find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
+      "00A"
+    );
+    await tester.pump();
+
+    TextButton btnok = tester.widget<TextButton>(find.ancestor(of: find.text("OK"), matching: find.byType(TextButton)));
+    expect(btnok.enabled, isFalse);
+    */
+
+  });
 }
