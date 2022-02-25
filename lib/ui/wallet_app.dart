@@ -18,6 +18,8 @@ class EasyWalletHomePage extends StatefulWidget {
 class _EasyWalletState extends State<EasyWalletHomePage> {
   final TextEditingController _addressController = TextEditingController();
 
+  String newWalletAddress = "";
+
   @override
   void initState() {
     super.initState();
@@ -46,8 +48,9 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
                 style: ElevatedButton.styleFrom(
                   shape: CircleBorder(),
                 ),
-                onPressed: () {
-                  _showAddWalletDialog(context);
+                onPressed: () async {
+                  newWalletAddress = await _showAddWalletDialog(context);
+                  setState(() {});
                 })
           ],
         ),
@@ -55,51 +58,55 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
     );
   }
 
-  Future<void> _showAddWalletDialog(BuildContext context) async {
+  Future<String> _showAddWalletDialog(BuildContext context) async {
     
-    return await showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                title: const Text('Add public wallet'),
-                content: Wrap(
-                  children: [
-                    Text("Insert the 20 bytes public address:"),
-                    TextField(
-                      controller: _addressController,
-                      maxLength: 40,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      decoration: InputDecoration(
-                          hintText: "eg: 00000000219ab540356cBB839Cbe05303d7705Fa"),
-                    ),
-                  ],
+    String result = await showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Add public wallet'),
+            content: Wrap(
+              children: [
+                Text("Insert the 20 bytes public address:"),
+                TextField(
+                  controller: _addressController,
+                  maxLength: 40,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  decoration: InputDecoration(
+                      hintText: "eg: 00000000219ab540356cBB839Cbe05303d7705Fa"),
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('CANCEL'),
-                    onPressed: () {
-                      _addressController.clear();
-                      setState(() {
-                        Navigator.pop(context);
-                      });
-                    },
-                  ),
-                  TextButton(
-                    child: const Text('OK'),
-                    onPressed: (!isWalletAddressValid(_addressController.value.text)) ? null : () {
-                      Navigator.pop(context);
-                      _addressController.clear();
-                    }
-                  )
-                ],
-              );
-            }
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('CANCEL'),
+                onPressed: () {
+                  _addressController.clear();
+                  setState(() {
+                    Navigator.pop(context, "");
+                  });
+                },
+              ),
+              TextButton(
+                child: const Text('OK'),
+                onPressed: (!isWalletAddressValid(_addressController.value.text)) ? null : () {
+                  Navigator.pop(context, _addressController.value.text);
+                  _addressController.clear();
+                }
+              )
+            ],
           );
-        });
+        }
+      );
+    });
+
+    print("result: $result");
+
+    return result;
   }
 
 }
