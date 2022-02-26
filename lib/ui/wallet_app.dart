@@ -1,7 +1,7 @@
-import 'package:easy_wallet/utils.dart';
 import "package:flutter/material.dart";
 
 import "package:easy_wallet/resources/constants.dart";
+import "package:easy_wallet/ui/add_wallet_dialog.dart";
 
 class EasyWalletApp extends StatelessWidget {
   @override
@@ -16,20 +16,17 @@ class EasyWalletHomePage extends StatefulWidget {
 }
 
 class _EasyWalletState extends State<EasyWalletHomePage> {
-  final TextEditingController _addressController = TextEditingController();
-
   String newWalletAddress = "";
 
   @override
   void initState() {
     super.initState();
-    _addressController.clear();
+
   }
 
   @override
   void dispose() {
     super.dispose();
-    _addressController.dispose();
   }
 
   @override
@@ -51,7 +48,8 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
                 onPressed: () async {
                   newWalletAddress = await _showAddWalletDialog(context);
                   setState(() {});
-                })
+                }
+            )
           ],
         ),
       ),
@@ -61,50 +59,10 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
   Future<String> _showAddWalletDialog(BuildContext context) async {
     
     String result = await showDialog(
-    context: context,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return AlertDialog(
-            title: const Text('Add public wallet'),
-            content: Wrap(
-              children: [
-                Text("Insert the 20 bytes public address:"),
-                TextField(
-                  controller: _addressController,
-                  maxLength: 40,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                  decoration: InputDecoration(
-                      hintText: "eg: 00000000219ab540356cBB839Cbe05303d7705Fa"),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('CANCEL'),
-                onPressed: () {
-                  _addressController.clear();
-                  setState(() {
-                    Navigator.pop(context, "");
-                  });
-                },
-              ),
-              TextButton(
-                child: const Text('OK'),
-                onPressed: (!isWalletAddressValid(_addressController.value.text)) ? null : () {
-                  Navigator.pop(context, _addressController.value.text);
-                  _addressController.clear();
-                }
-              )
-            ],
-          );
-        }
-      );
+      context: context,
+      builder: (context) {
+        return AddWalletDialog();
     });
-
-    print("result: $result");
 
     return result;
   }
