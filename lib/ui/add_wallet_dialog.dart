@@ -9,18 +9,18 @@ class AddWalletDialog extends StatefulWidget {
 }
 
 class _AddWalletDialogState extends State<AddWalletDialog> {
-  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _addressController.clear();
+    addressController.clear();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _addressController.dispose();
+    addressController.dispose();
   }
 
   @override
@@ -31,9 +31,9 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
               title: const Text('Add public wallet'),
               content: Wrap(
                 children: [
-                  Text("Insert the 20 bytes public address:"),
+                  Text("Insert the 20 hex bytes public address:"),
                   TextField(
-                    controller: _addressController,
+                    controller: addressController,
                     maxLength: 40,
                     onChanged: (value) {
                       setState(() {});
@@ -47,7 +47,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
                 TextButton(
                   child: const Text('CANCEL'),
                   onPressed: () {
-                    _addressController.clear();
+                    addressController.clear();
                     setState(() {
                       Navigator.pop(context, "");
                     });
@@ -55,9 +55,9 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
                 ),
                 TextButton(
                   child: const Text('OK'),
-                  onPressed: (!isWalletAddressValid(_addressController.value.text)) ? null : () {
-                    Navigator.pop(context, _addressController.value.text);
-                    _addressController.clear();
+                  onPressed: (!isWalletAddressValid(addressController.value.text)) ? null : () {
+                    Navigator.pop(context, addressController.value.text);
+                    addressController.clear();
                   }
                 )
               ],
