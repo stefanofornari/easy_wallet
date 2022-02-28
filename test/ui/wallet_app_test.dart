@@ -58,20 +58,60 @@ void main() {
   });
 
   testWidgets('adding/remove a wallet updates the cards view', (WidgetTester tester) async {
+    const String WALLET1 = "1234567890123456789012345678901234567890";
+    const String WALLET2 = "0123456789012345678901234567890123456789";
+
     await tester.pumpWidget(EasyWalletApp());
     EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
 
-    home.state.addWallet("1234567890123456789012345678901234567890");
-    await tester.pump();
+    home.state.addWallet(WALLET1);
+    await tester.pumpAndSettle();
     expect(find.byType(Card), findsOneWidget);
+    expect(find.byKey(Key(WALLET1)), findsOneWidget);
 
-    home.state.addWallet("0123456789012345678901234567890123456789");
+    bool found = false;
+    var texts = tester.widgetList(
+      find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byType(RichText))
+    ).iterator;
+    while (texts.moveNext()) {
+      RichText t = texts.current as RichText;
+      if (t.text.toPlainText().contains(WALLET1)) {
+        found = true; 
+      }
+    }
+    expect(found, true);
+
+    home.state.addWallet(WALLET2);
     await tester.pump();
     expect(find.byType(Card), findsNWidgets(2));
+    expect(find.byKey(Key(WALLET2)), findsOneWidget);
+    found = false;
+    texts = tester.widgetList(
+      find.descendant(of: find.byKey(Key(WALLET2)), matching: find.byType(RichText))
+    ).iterator;
+    while (texts.moveNext()) {
+      RichText t = texts.current as RichText;
+      if (t.text.toPlainText().contains(WALLET2)) {
+        found = true; 
+      }
+    }
+    expect(found, true);
 
-    home.state.removeWallet("0123456789012345678901234567890123456789");
+    home.state.removeWallet(WALLET2);
     await tester.pump();
     expect(find.byType(Card), findsOneWidget);
+    expect(find.byKey(Key(WALLET1)), findsOneWidget);
+    found = false;
+    texts = tester.widgetList(
+      find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byType(RichText))
+    ).iterator;
+    while (texts.moveNext()) {
+      RichText t = texts.current as RichText;
+      if (t.text.toPlainText().contains(WALLET1)) {
+        found = true; 
+      }
+    }
+    expect(found, true);
   });
   
 }
