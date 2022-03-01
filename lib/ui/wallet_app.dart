@@ -29,7 +29,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
   void addWallet(String wallet) {
     _wallets.add(wallet);
     setState(() {}); // TODO: move outside into the controller
-  }
+  } 
 
   void removeWallet(String wallet) {
     _wallets.remove(wallet);
@@ -93,7 +93,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
   List<Widget> _createWalletCard() {
     List<Widget> cards = [];
 
-    _wallets.forEach((address) {
+    for (var address in _wallets) {
       cards.add(
         Card(
           key: Key(address),
@@ -122,11 +122,28 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
                                 ),
                               ],
                             ),
-                            Row(
-                              children: <Widget>[_cryptoAmount()],
+                            IntrinsicHeight(
+                              child: Row(
+                                children: <Widget>[
+                                  _cryptoAmount(),
+                                  Expanded(
+                                    child: Container(
+                                      alignment: Alignment.bottomRight,
+                                      child: ElevatedButton(
+                                        child: const Icon(Icons.delete),
+                                        style: ElevatedButton.styleFrom(
+                                          shape: CircleBorder(),
+                                        ),
+                                        onPressed: () {}
+                                      ),
+                                    ),
+                                  )
+                                ]
+                              )
                             )
                           ],
-                        ))
+                        )
+                      )
                   ],
                 ),
               )
@@ -134,7 +151,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
           ),
         )
       );
-    });
+    };
 
     return cards;
   }
