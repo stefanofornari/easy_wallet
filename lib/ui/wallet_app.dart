@@ -133,8 +133,11 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
                                         child: const Icon(Icons.delete),
                                         style: ElevatedButton.styleFrom(
                                           shape: CircleBorder(),
+                                          primary: Colors.blueGrey
                                         ),
-                                        onPressed: () {}
+                                        onPressed: () {
+                                          removeWallet(address);
+                                        }
                                       ),
                                     ),
                                   )

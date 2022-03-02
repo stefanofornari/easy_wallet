@@ -16,12 +16,10 @@ void main() {
 
     var button = find.descendant(of: find.byKey(Key(ADDRESS)), matching: find.byIcon(Icons.delete));
     expect(button, findsOneWidget);
-/*
+
     await tester.tap(button);
     await tester.pumpAndSettle();
 
     expect(find.byType(Card), findsNothing);
-
-    */
   });
 }
