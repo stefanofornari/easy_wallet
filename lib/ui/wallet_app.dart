@@ -29,7 +29,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
   void addWallet(String wallet) {
     _wallets.add(wallet);
     setState(() {}); // TODO: move outside into the controller
-  } 
+  }
 
   void removeWallet(String wallet) {
     _wallets.remove(wallet);
