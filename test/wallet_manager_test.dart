@@ -13,7 +13,7 @@ const String WALLET2 = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
 
 void main() {
   
-  test('construc wallet manager', () {
+  test('create wallet manager', () {
     expect(WalletManager("https://mainnet.infura.io/v3/PROJECTID1").endpoint,
       "https://mainnet.infura.io/v3/PROJECTID1");
     expect(WalletManager("https://mainnet.infura.io/v3/PROJECTID2").endpoint,
