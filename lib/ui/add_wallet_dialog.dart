@@ -1,15 +1,15 @@
-import 'package:easy_wallet/utils.dart';
 import 'package:flutter/material.dart';
+
+import 'package:easy_wallet/ui/address_editing_controller.dart';
 
 
 class AddWalletDialog extends StatefulWidget {
   @override
   _AddWalletDialogState createState() => _AddWalletDialogState();
-
 }
 
 class _AddWalletDialogState extends State<AddWalletDialog> {
-  final TextEditingController addressController = TextEditingController();
+  final AddressEditingController addressController = AddressEditingController();
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
                 ),
                 TextButton(
                   child: const Text('OK'),
-                  onPressed: (!isWalletAddressValid(addressController.value.text)) ? null : () {
+                  onPressed: (!addressController.isValidAddress(addressController.value.text)) ? null : () {
                     Navigator.pop(context, addressController.value.text);
                     addressController.clear();
                   }
