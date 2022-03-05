@@ -12,7 +12,6 @@ Future<void> _showDialog(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-
 void main() {
   testWidgets('empty home page', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
