@@ -5,6 +5,8 @@ import "package:crypto_font_icons/crypto_font_icons.dart";
 import "package:easy_wallet/resources/constants.dart";
 import "package:easy_wallet/ui/add_wallet_dialog.dart";
 
+import "package:easy_wallet/easy_wallet.dart";
+import "package:easy_wallet/ui/wallet_list_controller.dart";
 
 
 class EasyWalletApp extends StatelessWidget {
@@ -24,25 +26,22 @@ class EasyWalletHomePage extends StatefulWidget {
 }
 
 class _EasyWalletState extends State<EasyWalletHomePage> {
-  List<String> _wallets = [];
+  final WalletListController controller = WalletListController();
 
-  void addWallet(String wallet) {
-    _wallets.add(wallet);
-    setState(() {}); // TODO: move outside into the controller
-  }
-
-  void removeWallet(String wallet) {
-    _wallets.remove(wallet);
-    setState(() {}); // TODO: move outside into the controller
+  void _onChange() {
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
+    controller.value.clear();
+    controller.addListener(_onChange);
   }
 
   @override
   void dispose() {
+    controller.dispose();
     super.dispose();
   }
 
@@ -60,7 +59,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
         child: const Icon(Icons.add),
         key: KEY_ADD_WALLET,
         onPressed: () async {
-          addWallet(await _showAddWalletDialog(context));
+          controller + EasyWallet(await _showAddWalletDialog(context));
           //setState(() {});
         },
       ),
@@ -81,7 +80,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
   List<Widget> _composeMainView() {
     var children = <Widget> [
       Visibility(
-        visible: _wallets.isEmpty,
+        visible: controller.value.isEmpty,
         child:
           Text("No wallets yet..."),
       )
@@ -93,10 +92,10 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
   List<Widget> _createWalletCard() {
     List<Widget> cards = [];
 
-    for (var address in _wallets) {
+    for (var wallet in controller.value) {
       cards.add(
         Card(
-          key: Key(address),
+          key: Key(wallet.address),
           elevation: 5,
 
           child: Padding(
@@ -118,7 +117,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
                                   height: 10,
                                 ),
                                 Flexible(
-                                  child: _walletAddressAndCrypto(address)
+                                  child: _walletAddressAndCrypto(wallet.address)
                                 ),
                               ],
                             ),
@@ -136,7 +135,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
                                           primary: Colors.blueGrey
                                         ),
                                         onPressed: () {
-                                          removeWallet(address);
+                                          controller - wallet.address;
                                         }
                                       ),
                                     ),

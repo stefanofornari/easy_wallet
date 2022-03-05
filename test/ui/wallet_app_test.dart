@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:easy_wallet/easy_wallet.dart';
 import "package:easy_wallet/resources/constants.dart";
 import 'package:easy_wallet/ui/wallet_app.dart';
 
@@ -64,7 +65,7 @@ void main() {
     await tester.pumpWidget(EasyWalletApp());
     EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
 
-    home.state.addWallet(WALLET1);
+    home.state.controller + EasyWallet(WALLET1);
     await tester.pumpAndSettle();
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
@@ -81,7 +82,7 @@ void main() {
     }
     expect(found, true);
 
-    home.state.addWallet(WALLET2);
+    home.state.controller + EasyWallet(WALLET2);
     await tester.pump();
     expect(find.byType(Card), findsNWidgets(2));
     expect(find.byKey(Key(WALLET2)), findsOneWidget);
@@ -97,7 +98,7 @@ void main() {
     }
     expect(found, true);
 
-    home.state.removeWallet(WALLET2);
+    home.state.controller - WALLET2;
     await tester.pump();
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/ui/wallet_app.dart';
 
 void main() {
@@ -11,7 +12,7 @@ void main() {
 
     EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
 
-    home.state.addWallet(ADDRESS);
+    home.state.controller + EasyWallet(ADDRESS);
     await tester.pump();
 
     var button = find.descendant(of: find.byKey(Key(ADDRESS)), matching: find.byIcon(Icons.delete));
