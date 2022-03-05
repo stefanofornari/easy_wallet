@@ -58,7 +58,10 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
         child: const Icon(Icons.add),
         key: KEY_ADD_WALLET,
         onPressed: () async {
-          controller + EasyWallet(await _showAddWalletDialog(context));
+          String address = await _showAddWalletDialog(context);
+          if (address.isNotEmpty) {
+            controller + EasyWallet(address);
+          }
         },
       ),
     );
@@ -69,7 +72,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
     String result = await showDialog(
       context: context,
       builder: (context) {
-        return AddWalletDialog();
+        return AddWalletDialog(controller);
     });
 
     return result;

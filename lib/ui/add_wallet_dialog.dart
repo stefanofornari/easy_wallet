@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 
+import 'package:easy_wallet/ui/wallet_list_controller.dart';
 import 'package:easy_wallet/ui/address_editing_controller.dart';
 
 
 class AddWalletDialog extends StatefulWidget {
+  final WalletListController listController;
+
+  AddWalletDialog(this.listController) {}
+
   @override
-  _AddWalletDialogState createState() => _AddWalletDialogState();
+  _AddWalletDialogState createState() => _AddWalletDialogState(listController);
 }
 
 class _AddWalletDialogState extends State<AddWalletDialog> {
+  final WalletListController listController;
+
+  _AddWalletDialogState(this.listController) {}
+
   final AddressEditingController addressController = AddressEditingController();
 
   @override
@@ -55,7 +64,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
                 ),
                 TextButton(
                   child: const Text('OK'),
-                  onPressed: (!addressController.isValidAddress(addressController.value.text)) ? null : () {
+                  onPressed: !_validate(addressController.value.text) ? null : () {
                     Navigator.pop(context, addressController.value.text);
                     addressController.clear();
                   }
@@ -64,5 +73,12 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
             );
           }
         );
+  }
+
+  bool _validate(String address) {
+    return 
+      addressController.isValidAddress(addressController.value.text) 
+      &&
+      listController.isValidAddress(addressController.value.text);
   }
 }

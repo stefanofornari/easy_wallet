@@ -69,4 +69,13 @@ void main() {
     expect(fired, false);
   });
 
+  test('valid address is not in the list', () {
+    WalletListController C = WalletListController();
+
+    expect(C.isValidAddress(W1), true);
+    C + EasyWallet(W1) + EasyWallet(W2) + EasyWallet(W3);
+    expect(C.isValidAddress(W3), false);
+    expect(C.isValidAddress(W2), false);
+  });
+
 }

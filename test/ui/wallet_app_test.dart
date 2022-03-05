@@ -13,12 +13,16 @@ Future<void> _showDialog(WidgetTester tester) async {
 }
 
 void main() {
+
+  const String WALLET1 = "1234567890123456789012345678901234567890";
+  const String WALLET2 = "0123456789012345678901234567890123456789";
+
+
   testWidgets('empty home page', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
 
     expect(find.text("No wallets yet..."), findsWidgets);
     expect(find.byKey(KEY_ADD_WALLET), findsOneWidget);
-    //tester.widget(find.byKey(KEY_WALLET_LIST)
     expect(find.byType(Card), findsNothing);
   });
 
@@ -44,6 +48,19 @@ void main() {
     expect(find.byType(Dialog), findsNothing);
   });
 
+  testWidgets('valid address enables ok button', (WidgetTester tester) async {
+    await _showDialog(tester);
+    
+    await tester.enterText(
+      find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
+      WALLET1
+    );
+    await tester.pump();
+
+    TextButton btnok = tester.widget<TextButton>(find.ancestor(of: find.text("OK"), matching: find.byType(TextButton)));
+    expect(btnok.enabled, isTrue);
+  });
+
   testWidgets('invalid address invalidates ok button', (WidgetTester tester) async {
     await _showDialog(tester);
     
@@ -57,10 +74,26 @@ void main() {
     expect(btnok.enabled, isFalse);
   });
 
-  testWidgets('adding/remove a wallet updates the cards view', (WidgetTester tester) async {
-    const String WALLET1 = "1234567890123456789012345678901234567890";
-    const String WALLET2 = "0123456789012345678901234567890123456789";
+  testWidgets('existing address invalidates ok button', (WidgetTester tester) async {
+    await tester.pumpWidget(EasyWalletApp());
+    EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
 
+    home.state.controller + EasyWallet(WALLET1);
+
+    await tester.pumpAndSettle();
+    await _showDialog(tester);
+    
+    await tester.enterText(
+      find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
+      WALLET1
+    );
+    await tester.pump();
+
+    TextButton btnok = tester.widget<TextButton>(find.ancestor(of: find.text("OK"), matching: find.byType(TextButton)));
+    expect(btnok.enabled, isFalse);
+  });
+
+  testWidgets('adding/remove a wallet updates the cards view', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
     EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
 

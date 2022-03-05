@@ -23,4 +23,10 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
 
     return this;
   }
+
+  bool isValidAddress(String address) {
+    return !value.any((element) {
+      return element.address == address;
+    });
+  }
 }
