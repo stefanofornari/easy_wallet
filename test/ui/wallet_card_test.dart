@@ -5,9 +5,10 @@ import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/ui/wallet_app.dart';
 
 void main() {
-  testWidgets('delete a card', (WidgetTester tester) async {
-    const String ADDRESS = "1234567890123456789012345678901234567890";
 
+  const String ADDRESS = "1234567890123456789012345678901234567890";
+
+  testWidgets('delete card action', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
 
     EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));

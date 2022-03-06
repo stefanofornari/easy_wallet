@@ -1,8 +1,14 @@
 import "package:flutter/material.dart";
 
+import 'package:big_decimal/big_decimal.dart';
+
+import 'package:easy_wallet/wallet_manager.dart';
 import 'package:easy_wallet/easy_wallet.dart';
 
 class WalletListController extends ValueNotifier<List<EasyWallet>> {
+
+  WalletManager walletManager = WalletManager("");
+
   WalletListController() : super(<EasyWallet>[]) {}
 
   WalletListController operator +(EasyWallet wallet) {
@@ -22,6 +28,13 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
     }
 
     return this;
+  }
+
+  Future<void> retrieveBalance() async {
+    for (EasyWallet w in value) {
+      await walletManager.balance(w);
+      notifyListeners();
+    }
   }
 
   bool isValidAddress(String address) {

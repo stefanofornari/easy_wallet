@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../lib/wallet_manager_stub.dart';
+
 import 'package:easy_wallet/easy_wallet.dart';
 import "package:easy_wallet/resources/constants.dart";
 import 'package:easy_wallet/ui/wallet_app.dart';
@@ -12,24 +14,37 @@ Future<void> _showDialog(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+bool _findTextInCard(WidgetTester tester, Key key, String text) {
+  var texts = tester.widgetList(
+    find.descendant(of: find.byKey(key), matching: find.byType(RichText))
+  ).iterator;
+  while (texts.moveNext()) {
+    RichText t = texts.current as RichText;
+    if (t.text.toPlainText().contains(text)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void main() {
 
   const String WALLET1 = "1234567890123456789012345678901234567890";
   const String WALLET2 = "0123456789012345678901234567890123456789";
 
-
-  testWidgets('empty home page', (WidgetTester tester) async {
+  testWidgets('main app has all ui elements', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
 
-    expect(find.text("No wallets yet..."), findsWidgets);
     expect(find.byKey(KEY_ADD_WALLET), findsOneWidget);
-    expect(find.byType(Card), findsNothing);
+    expect(find.byKey(KEY_REFRESH), findsOneWidget);
+
+    expect(find.byType(Dialog), findsNothing);
+
   });
 
   testWidgets('show add wallet dialog', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
-
-    expect(find.byType(Dialog), findsNothing);
 
     var button = find.byKey(KEY_ADD_WALLET);
 
@@ -101,50 +116,55 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
-
-    bool found = false;
-    var texts = tester.widgetList(
-      find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byType(RichText))
-    ).iterator;
-    while (texts.moveNext()) {
-      RichText t = texts.current as RichText;
-      if (t.text.toPlainText().contains(WALLET1)) {
-        found = true; 
-      }
-    }
-    expect(found, true);
+    expect(_findTextInCard(tester, Key(WALLET1), WALLET1), true);
 
     home.state.controller + EasyWallet(WALLET2);
     await tester.pump();
     expect(find.byType(Card), findsNWidgets(2));
     expect(find.byKey(Key(WALLET2)), findsOneWidget);
-    found = false;
-    texts = tester.widgetList(
-      find.descendant(of: find.byKey(Key(WALLET2)), matching: find.byType(RichText))
-    ).iterator;
-    while (texts.moveNext()) {
-      RichText t = texts.current as RichText;
-      if (t.text.toPlainText().contains(WALLET2)) {
-        found = true; 
-      }
-    }
-    expect(found, true);
+    expect(_findTextInCard(tester, Key(WALLET2), WALLET2), true);
 
     home.state.controller - WALLET2;
     await tester.pump();
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
-    found = false;
-    texts = tester.widgetList(
-      find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byType(RichText))
-    ).iterator;
-    while (texts.moveNext()) {
-      RichText t = texts.current as RichText;
-      if (t.text.toPlainText().contains(WALLET1)) {
-        found = true; 
-      }
-    }
-    expect(found, true);
+    expect(_findTextInCard(tester, Key(WALLET1), WALLET1), true);
   });
+  
+
+  testWidgets('refresh shows updated balance', (WidgetTester tester) async {
+    await tester.pumpWidget(EasyWalletApp());
+
+    //
+    // add a couple of wallets
+    //
+    EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
+    home.state.controller + EasyWallet(WALLET1) + EasyWallet(WALLET2);
+
+    //
+    // prepaare the stubbed WalletManager
+    //
+    WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTID1");
+
+    wm.argsMap = {
+      "0x" + WALLET1: "0xffaffaa4",
+      "0x" + WALLET2: "0xaa1010e5"
+    };
+    home.state.controller.walletManager = wm;
+
+
+    //
+    // trigger refresh
+    //
+    await tester.tap(find.byKey(KEY_REFRESH)); await tester.pumpAndSettle();
+
+    //
+    // balances updated
+    //
+    print(tester.widgetList(find.byType(RichText)));
+    expect(_findTextInCard(tester, Key(WALLET1), "\n 4289723044"), true);
+    expect(_findTextInCard(tester, Key(WALLET2), "\n 2853179621"), true);
+  });
+
   
 }

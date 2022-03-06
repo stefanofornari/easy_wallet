@@ -47,6 +47,30 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            key: KEY_REFRESH,
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              controller.retrieveBalance();
+            }
+          ),
+          /*
+          PopupMenuButton(
+            icon: Icon(Icons.more_vert),
+            itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+              const PopupMenuItem(
+                child: ListTile(
+                  leading: Icon(Icons.refresh),
+                  title: Text('Refresh'),
+                ),
+              ),
+            ],
+          ),
+          */
+        ],
+      ),
       body: Center(
         child: Column(
           children: _composeMainView()
@@ -54,7 +78,6 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
       ),
 
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.green,
         child: const Icon(Icons.add),
         key: KEY_ADD_WALLET,
         onPressed: () async {

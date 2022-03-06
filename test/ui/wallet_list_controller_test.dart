@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../lib/wallet_manager_stub.dart';
+
 import 'package:easy_wallet/easy_wallet.dart';
+import 'package:easy_wallet/wallet_manager.dart';
 import 'package:easy_wallet/ui/wallet_list_controller.dart';
 
 void main() {
@@ -13,6 +16,7 @@ void main() {
   test('create wallet controller', () {
     expect(WalletListController() is ValueNotifier, true);
     expect(WalletListController().value, []);
+    expect(WalletListController().walletManager is WalletManager, true);
   });
 
   test('+/- walltes adds/removes the wollet from the value', () {
@@ -77,5 +81,24 @@ void main() {
     expect(C.isValidAddress(W3), false);
     expect(C.isValidAddress(W2), false);
   });
+
+  test('retrieveBalance retrieves the current balance via walletManager', () async {
+    WalletListController c = WalletListController();
+    WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTID1");
+
+    wm.argsMap = {
+      "0x" + W1: "0xffaffaa4",
+      "0x" + W2: "0xaa1010e5"
+    };
+
+    c.walletManager = wm;
+    c + EasyWallet(W1) + EasyWallet(W2);
+
+    await c.retrieveBalance();
+
+    expect(c.value[0].balance.toDouble(), 4289723044.0);
+    expect(c.value[1].balance.toDouble(), 2853179621.0);
+  });
+
 
 }

@@ -36,7 +36,7 @@ class WalletCard extends StatelessWidget {
                               height: 10,
                             ),
                             Flexible(
-                              child: _walletAddressAndCrypto(wallet.address)
+                              child: _walletAddressAndCrypto()
                             ),
                           ],
                         ),
@@ -57,7 +57,7 @@ class WalletCard extends StatelessWidget {
                                       onDelete();
                                     }
                                   ),
-                                ),
+                                )
                               )
                             ]
                           )
@@ -86,12 +86,12 @@ class WalletCard extends StatelessWidget {
     );
   }
 
-  Widget _walletAddressAndCrypto(String address) {
+  Widget _walletAddressAndCrypto() {
     return Align(
       alignment: Alignment.centerLeft,
       child: RichText(
         text: TextSpan(
-          text: "0x" + address,
+          text: "0x" + wallet.address,
           style: TextStyle(
             fontWeight: FontWeight.bold, 
             color: Colors.black, 
@@ -103,9 +103,11 @@ class WalletCard extends StatelessWidget {
             TextSpan(
                 text: "\nEthereum - ETH",
                 style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold)),
+                  color: Colors.grey,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold
+                )
+            ),
           ],
         ),
       )
@@ -123,20 +125,11 @@ class WalletCard extends StatelessWidget {
             RichText(
               textAlign: TextAlign.left,
               text: TextSpan(
-                text: "\n\$12.279",
+                text: "\n " + wallet.balance.toString(),
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 35,
                 ),
-                children: <TextSpan>[
-                  TextSpan(
-                      text: "\n0.1349",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontStyle: FontStyle.italic,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
-                ],
               ),
             ),
           ],
