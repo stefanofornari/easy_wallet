@@ -85,6 +85,7 @@ void main() {
   });
 
   test('retrieveBalance retrieves the current balance via walletManager', () async {
+<<<<<<< HEAD
     ew.preferences = const {
       KEY_CFG_ENDPOINT: "https://a.endpoint.io/v3",
       KEY_CFG_APPKEY: "PROJECTID1"
@@ -93,6 +94,16 @@ void main() {
 
     expect(c.walletManager.endpoint, "https://a.endpoint.io/v3/PROJECTID1");
 
+=======
+    Map<String, String> preferences = const {
+      KEY_CFG_ENDPOINT: "https://a.endpoint.io/v3",
+      KEY_CFG_APPKEY: "PROJECTID1"
+    };
+    WalletListController c = WalletListController(preferences: preferences);
+
+    expect(c.walletManager.endpoint, "https://a.endpoint.io/v3/PROJECTID1");
+
+>>>>>>> ef156bb6bb88f823955a0cb21803303c1a2378d4
     WalletManageWithStub wm = WalletManageWithStub(c.walletManager.endpoint);
     wm.argsMap = {
       "0x" + W1: "0xffaffaa4",
