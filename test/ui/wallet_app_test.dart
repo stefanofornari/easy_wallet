@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../lib/wallet_manager_stub.dart';
-
 import 'package:easy_wallet/easy_wallet.dart';
 import "package:easy_wallet/resources/constants.dart";
 import 'package:easy_wallet/ui/wallet_app.dart';
+
+import '../stubs/wallet_manager_stub.dart';
 
 Future<void> _showDialog(WidgetTester tester) async {
   await tester.pumpWidget(EasyWalletApp());
@@ -152,7 +152,6 @@ void main() {
     };
     home.state.controller.walletManager = wm;
 
-
     //
     // trigger refresh
     //
@@ -161,7 +160,6 @@ void main() {
     //
     // balances updated
     //
-    print(tester.widgetList(find.byType(RichText)));
     expect(_findTextInCard(tester, Key(WALLET1), "\n 4289723044"), true);
     expect(_findTextInCard(tester, Key(WALLET2), "\n 2853179621"), true);
   });

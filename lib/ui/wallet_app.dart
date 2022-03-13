@@ -9,15 +9,18 @@ import "package:easy_wallet/ui/wallet_list_controller.dart";
 
 
 class EasyWalletApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "EasyWallet", home: EasyWalletHomePage());
+    return MaterialApp(
+      title: "EasyWallet", 
+      home: EasyWalletHomePage()
+    );
   }
 }
 
 class EasyWalletHomePage extends StatefulWidget {
   late final _EasyWalletState state;
-
 
   @override
   _EasyWalletState createState() => (state = _EasyWalletState());
