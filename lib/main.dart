@@ -1,11 +1,41 @@
+import 'dart:io';
 import 'dart:math' as math;
-import 'package:flutter/material.dart';
-import 'package:easy_wallet/ui/wallet_app.dart';
+import 'dart:convert' show json;
+import 'package:file/file.dart';
+import 'package:file/local.dart';
+import 'package:path/path.dart' as path;
 
+import 'package:flutter/material.dart';
 import 'package:window_size/window_size.dart';
 
+import 'package:easy_wallet/ui/wallet_app.dart';
+
+Map<String, String> preferences = const {};
+late EasyWalletApp app;
+
+FileSystem fs = const LocalFileSystem();
+
 void main() {
-  runApp(EasyWalletApp());
+
+  //
+  // read the configuration and store it in memory
+  //
+  File configDir = fs.file(path.join(Platform.environment["APPDATA"] ?? path.separator, "ste.easy_wallet"));
+  File configFile = fs.file(path.join(configDir.path, "preferences.json"));
+
+  if (!configFile.existsSync()) {
+    preferences = {};
+  } else {
+    final String configJson = configFile.readAsStringSync();
+    if (configJson.isNotEmpty) {
+      final Object? data = json.decode(configJson);
+      if (data is Map) {
+        preferences = data.cast<String, String>();
+      }
+    }
+  }
+
+  runApp(app = EasyWalletApp());
   getWindowInfo().then((window) {
     final screen = window.screen;
     if (screen != null) {

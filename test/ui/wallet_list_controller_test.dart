@@ -1,7 +1,8 @@
+import 'package:easy_wallet/resources/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../lib/wallet_manager_stub.dart';
+import '../stubs/wallet_manager_stub.dart';
 
 import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/wallet_manager.dart';
@@ -83,9 +84,15 @@ void main() {
   });
 
   test('retrieveBalance retrieves the current balance via walletManager', () async {
-    WalletListController c = WalletListController();
-    WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTID1");
+    Map<String, String> preferences = const {
+      KEY_CFG_ENDPOINT: "https://a.endpoint.io/v3",
+      KEY_CFG_APPKEY: "PROJECTID1"
+    };
+    WalletListController c = WalletListController(preferences: preferences);
 
+    expect(c.walletManager.endpoint, "https://a.endpoint.io/v3/PROJECTID1");
+
+    WalletManageWithStub wm = WalletManageWithStub(c.walletManager.endpoint);
     wm.argsMap = {
       "0x" + W1: "0xffaffaa4",
       "0x" + W2: "0xaa1010e5"

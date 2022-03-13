@@ -1,15 +1,19 @@
+import 'package:easy_wallet/resources/constants.dart';
 import "package:flutter/material.dart";
-
-import 'package:big_decimal/big_decimal.dart';
 
 import 'package:easy_wallet/wallet_manager.dart';
 import 'package:easy_wallet/easy_wallet.dart';
 
 class WalletListController extends ValueNotifier<List<EasyWallet>> {
 
-  WalletManager walletManager = WalletManager("");
+  late WalletManager walletManager;
 
-  WalletListController() : super(<EasyWallet>[]) {}
+  WalletListController({Map<String, String> preferences = const {}}) : super(<EasyWallet>[]) {
+    walletManager = WalletManager(
+      (preferences[KEY_CFG_ENDPOINT] ?? "") + "/" + (preferences[KEY_CFG_APPKEY] ?? "")
+    );
+  }
+
 
   WalletListController operator +(EasyWallet wallet) {
     value.add(wallet); notifyListeners();

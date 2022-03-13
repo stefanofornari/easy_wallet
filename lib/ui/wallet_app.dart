@@ -9,6 +9,12 @@ import "package:easy_wallet/ui/wallet_list_controller.dart";
 
 
 class EasyWalletApp extends StatelessWidget {
+
+  final Map<String, String> preferences;
+
+  EasyWalletApp({this.preferences = const {}}) {}
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(title: "EasyWallet", home: EasyWalletHomePage());

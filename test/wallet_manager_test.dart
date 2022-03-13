@@ -4,7 +4,7 @@ import 'package:big_decimal/big_decimal.dart';
 import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/wallet_manager.dart';
 
-import 'lib/wallet_manager_stub.dart';
+import 'stubs/wallet_manager_stub.dart';
 
 const String WALLET1 = "0x00000000219ab540356cbb839cbe05303d7705fa";
 const String WALLET2 = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
