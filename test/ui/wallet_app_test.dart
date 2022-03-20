@@ -14,6 +14,8 @@ Future<void> _showDialog(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+//
+// TODO: replace with text()
 bool _findTextInCard(WidgetTester tester, Key key, String text) {
   var texts = tester.widgetList(
     find.descendant(of: find.byKey(key), matching: find.byType(RichText))
@@ -163,6 +165,34 @@ void main() {
     expect(_findTextInCard(tester, Key(WALLET1), "\n 4289723044"), true);
     expect(_findTextInCard(tester, Key(WALLET2), "\n 2853179621"), true);
   });
+
+  testWidgets('refresh shows a message if connection error', (WidgetTester tester) async {
+    await tester.pumpWidget(EasyWalletApp());
+
+    //
+    // add a couple of wallets
+    //
+    EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
+    home.state.controller + EasyWallet(WALLET1);
+
+    //
+    // prepaare the stubbed WalletManager
+    //
+    WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/PROJECTID1/SocketException");
+
+    home.state.controller.walletManager = wm;
+
+    //
+    // trigger refresh
+    //
+    await tester.tap(find.byKey(KEY_REFRESH)); await tester.pump();
+
+    //
+    // balances updated
+    //
+    expect(find.text("I could not reach the endpoind, please check the preferences or the connectivity", findRichText: true), findsOneWidget);
+  });
+
 
   
 }

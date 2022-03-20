@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:http/http.dart';
@@ -16,6 +17,13 @@ class MockClient extends BaseClient {
       {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
     if (body is! String) {
       fail('Invalid request, expected string as request body');
+    }
+
+    String u = url.toString();
+    if (u.endsWith("/SocketException")) {
+      throw SocketException("generated socket error for $url");
+    } else if (u.endsWith("/HttpException")) {
+      fail('HTTP error');
     }
 
     final data = json.decode(body) as Map<String, dynamic>;

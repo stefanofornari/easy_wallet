@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:test/test.dart';
 
 import 'package:big_decimal/big_decimal.dart';
 import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/wallet_manager.dart';
+import 'package:easy_wallet/wallet_exception.dart';
 
 import 'stubs/wallet_manager_stub.dart';
 
@@ -35,5 +37,17 @@ void main() {
     await wm.balance(w);
     expect(w.balance, BigDecimal.parse("7592901870686660123035923"));
   });
-}
 
+  test('turn network errors into WalletException', () async {
+    WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECT/SocketException");
+
+    try {
+      await wm.balance(EasyWallet(WALLET1));
+    } on WalletException catch(e) {
+      expect(e.message, "I could not reach the endpoind, please check the preferences or the connectivity");
+      return;
+    }
+    fail("no SocketException");
+ 
+  });
+}

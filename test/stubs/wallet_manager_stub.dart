@@ -11,7 +11,8 @@ class WalletManageWithStub extends WalletManager {
 
   @override
   Client getHttpClient() {
-    return MockClient((method, data) {
+    Client client = 
+    MockClient((method, data) {
       if (method == "eth_getBalance") {
         if (data != null) {
           List args = data as List;
@@ -21,5 +22,7 @@ class WalletManageWithStub extends WalletManager {
       }
       return "boh";
     });
+
+    return client;
   }
 }

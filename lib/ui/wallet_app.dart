@@ -4,6 +4,7 @@ import "package:easy_wallet/resources/constants.dart";
 import "package:easy_wallet/ui/add_wallet_dialog.dart";
 
 import "package:easy_wallet/easy_wallet.dart";
+import "package:easy_wallet/wallet_exception.dart";
 import "package:easy_wallet/ui/wallet_card.dart";
 import "package:easy_wallet/ui/wallet_list_controller.dart";
 
@@ -30,7 +31,7 @@ class EasyWalletHomePage extends StatefulWidget {
 class _EasyWalletState extends State<EasyWalletHomePage> {
   final WalletListController controller = WalletListController();
 
-  void _onChange() {
+  void _onChange() async {
     setState(() {});
   }
 
@@ -55,8 +56,15 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
           IconButton(
             key: KEY_REFRESH,
             icon: const Icon(Icons.refresh),
-            onPressed: () {
-              controller.retrieveBalance();
+            onPressed: () async {
+              try {
+                await controller.retrieveBalance();
+              } on WalletException catch (e) {
+                final snackBar = SnackBar(
+                  content: Text(e.message)
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
           ),
           /*
