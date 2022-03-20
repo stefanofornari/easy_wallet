@@ -12,25 +12,7 @@ class MockClient extends BaseClient {
 
   MockClient(this.handler);
 
-  @override
-  Future<Response> post(Uri url,
-      {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
-    if (body is! String) {
-      fail('Invalid request, expected string as request body');
-    }
-
-    String u = url.toString();
-    if (u.endsWith("/SocketException")) {
-      throw SocketException("generated socket error for $url");
-    } else if (u.endsWith("/HttpException")) {
-      fail('HTTP error');
-    }
-
-    final data = json.decode(body) as Map<String, dynamic>;
-    if (data['jsonrpc'] != '2.0') {
-      fail('Expected request to contain correct jsonrpc key');
-    }
-
+  Response _buildResponse(String body, Map<String, dynamic> data, int status) {
     final id = data['id'];
     final method = data['method'] as String;
     final params = data['params'];
@@ -40,7 +22,35 @@ class MockClient extends BaseClient {
       'result': handler(method, params)
     };
 
-    return Response(json.encode(response), 200);
+    return Response(json.encode(response), status);
+  }
+
+  @override
+  Future<Response> post(Uri url,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) async {
+    if (body is! String) {
+      fail('Invalid request, expected string as request body');
+    }
+
+    final data = json.decode(body) as Map<String, dynamic>;
+    if (data['jsonrpc'] != '2.0') {
+      fail('Expected request to contain correct jsonrpc key');
+    }
+
+    final String u = url.toString();
+    if (u.endsWith("/SocketException")) {
+      throw SocketException("generated socket error for $url");
+    } else {
+      final RegExp regex = RegExp(r"^.*\/HttpStatus\/([0-9]+)");
+      final match = regex.firstMatch(u);
+      if (match != null) {
+        String code = match.group(1) ?? "";
+        return Response("HTTP status $code", int.parse(code));
+      }
+    }
+
+    
+    return _buildResponse(body, data, 200);
   }
 
   @override

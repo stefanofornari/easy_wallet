@@ -6,6 +6,9 @@ import 'package:dart_web3/dart_web3.dart';
 import 'easy_wallet.dart';
 import 'wallet_exception.dart';
 
+const ERR_NETWORK_ERROR = "Provider not reachable, please check the preferences or the connectivity";
+const ERR_CONTENT_ERROR = "Invalid content from the provider, please check the preferences"; 
+
 class WalletManager {
   final String endpoint;
 
@@ -20,7 +23,9 @@ class WalletManager {
       
       wallet.balance = BigDecimal.fromBigInt(balance.getInWei);
     } on SocketException {
-      throw WalletException("I could not reach the endpoind, please check the preferences or the connectivity");
+      throw WalletException(ERR_NETWORK_ERROR);
+    } on FormatException {
+      throw WalletException(ERR_CONTENT_ERROR);
     }
 
   }

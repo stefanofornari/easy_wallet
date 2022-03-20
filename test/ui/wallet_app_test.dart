@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:easy_wallet/easy_wallet.dart';
+import 'package:easy_wallet/wallet_manager.dart';
 import "package:easy_wallet/resources/constants.dart";
 import 'package:easy_wallet/ui/wallet_app.dart';
 
@@ -190,7 +191,7 @@ void main() {
     //
     // balances updated
     //
-    expect(find.text("I could not reach the endpoind, please check the preferences or the connectivity", findRichText: true), findsOneWidget);
+    expect(find.text(ERR_NETWORK_ERROR, findRichText: true), findsOneWidget);
   });
 
 

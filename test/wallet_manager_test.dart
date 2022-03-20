@@ -44,10 +44,27 @@ void main() {
     try {
       await wm.balance(EasyWallet(WALLET1));
     } on WalletException catch(e) {
-      expect(e.message, "I could not reach the endpoind, please check the preferences or the connectivity");
+      expect(e.message, ERR_NETWORK_ERROR);
       return;
     }
-    fail("no SocketException");
+    fail("no WalletException");
+ 
+  });
+
+  test('turn http errors into WalletException', () async {
+    WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECT/HttpStatus/404");
+    wm.argsMap = {
+      WALLET1: "0x7baa706cf4a4220055045",
+      WALLET2: "0x647DC0901C745DB420913"
+    };
+
+    try {
+      await wm.balance(EasyWallet(WALLET1));
+    } on WalletException catch(e) {
+      expect(e.message, ERR_CONTENT_ERROR);
+      return;
+    }
+    fail("no WalletException");
  
   });
 }
