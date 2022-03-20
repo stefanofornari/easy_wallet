@@ -24,6 +24,7 @@ dependencies:
   yaru: ^0.0.6
   crypto_font_icons: 1.0.0+1
   shared_preferences: ^2.0.13
+  decimal: ^2.1.0
 
 dev_dependencies:
   flutter_test: 

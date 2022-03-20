@@ -125,7 +125,7 @@ class WalletCard extends StatelessWidget {
             RichText(
               textAlign: TextAlign.left,
               text: TextSpan(
-                text: "\n " + wallet.balance.toString(),
+                text: "\n ${wallet.readableBalance}",
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 35,

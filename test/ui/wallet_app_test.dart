@@ -163,8 +163,8 @@ void main() {
     //
     // balances updated
     //
-    expect(_findTextInCard(tester, Key(WALLET1), "\n 4289723044"), true);
-    expect(_findTextInCard(tester, Key(WALLET2), "\n 2853179621"), true);
+    expect(_findTextInCard(tester, Key(WALLET1), "\n 0.000000004289723044"), true);
+    expect(_findTextInCard(tester, Key(WALLET2), "\n 0.000000002853179621"), true);
   });
 
   testWidgets('refresh shows a message if connection error', (WidgetTester tester) async {
