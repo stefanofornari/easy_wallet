@@ -120,7 +120,7 @@ void main() {
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
     expect(_findTextInCard(tester, Key(WALLET1), WALLET1), true);
-
+    
     home.state.controller + EasyWallet(WALLET2);
     await tester.pump();
     expect(find.byType(Card), findsNWidgets(2));
