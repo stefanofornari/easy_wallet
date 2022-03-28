@@ -17,6 +17,8 @@ class WalletManageWithStub extends WalletManager {
         if (data != null) {
           List args = data as List;
 
+          print("$args");
+
           return argsMap[args.first];
         }
       }

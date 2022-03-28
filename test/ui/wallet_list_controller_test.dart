@@ -9,7 +9,6 @@ import '../stubs/wallet_manager_stub.dart';
 import 'package:easy_wallet/main.dart' as ew;
 import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/wallet_manager.dart';
-import 'package:easy_wallet/wallet_exception.dart';
 import 'package:easy_wallet/ui/wallet_list_controller.dart';
 
 void main() {
@@ -17,6 +16,24 @@ void main() {
   const String W1 = "1111111111111111111111111111111111111111";
   const String W2 = "2222222222222222222222222222222222222222";
   const String W3 = "3333333333333333333333333333333333333333";
+
+  WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTKEY1");;
+  WalletListController C = WalletListController();
+
+  setUp(() {
+    ew.preferences = const {
+      KEY_CFG_ENDPOINT: "https://a.endpoint.io/v3",
+      KEY_CFG_APPKEY: "PROJECTKEY1"
+    };
+    wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTKEY1");;
+    C = WalletListController();
+    wm.argsMap = {
+      "0x" + W1: "0xffaffaa4",
+      "0x" + W2: "0xaa1010e5",
+      "0x" + W3: "0x00000000"
+    };
+    C.walletManager = wm;
+  });
   
   test('create wallet controller', () {
     expect(WalletListController() is ValueNotifier, true);
@@ -24,9 +41,7 @@ void main() {
     expect(WalletListController().walletManager is WalletManager, true);
   });
 
-  test('+/- walltes adds/removes the wollet from the value', () {
-    WalletListController C = WalletListController();
-
+  test('+/- walltes adds/removes the wallet from the value', () {
     C + EasyWallet(W1);
     expect(C.value.length, 1);
     expect(C.value[0].address, W1);
@@ -57,7 +72,6 @@ void main() {
 
   test('call back the listeners upon changes', () {
     bool fired = false;
-    WalletListController C = WalletListController();
 
     C.addListener(() { fired = true; });
 
@@ -85,30 +99,6 @@ void main() {
     C + EasyWallet(W1) + EasyWallet(W2) + EasyWallet(W3);
     expect(C.isValidAddress(W3), false);
     expect(C.isValidAddress(W2), false);
-  });
-
-  test('retrieveBalance retrieves the current balance via walletManager', () async {
-    ew.preferences = const {
-      KEY_CFG_ENDPOINT: "https://a.endpoint.io/v3",
-      KEY_CFG_APPKEY: "PROJECTKEY1"
-    };
-    WalletListController c = WalletListController();
-
-    expect(c.walletManager.endpoint, "https://a.endpoint.io/v3/PROJECTKEY1");
-
-    WalletManageWithStub wm = WalletManageWithStub(c.walletManager.endpoint);
-    wm.argsMap = {
-      "0x" + W1: "0xffaffaa4",
-      "0x" + W2: "0xaa1010e5"
-    };
-
-    c.walletManager = wm;
-    c + EasyWallet(W1) + EasyWallet(W2);
-
-    await c.retrieveBalance();
-
-    expect(c.value[0].balance.toDouble(), 4289723044.0);
-    expect(c.value[1].balance.toDouble(), 2853179621.0);
   });
 
 }

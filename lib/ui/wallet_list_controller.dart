@@ -1,11 +1,9 @@
 
-import 'dart:io';
 import 'package:easy_wallet/resources/constants.dart';
 import "package:flutter/material.dart";
 
 import 'package:easy_wallet/main.dart' as ew;
 import 'package:easy_wallet/wallet_manager.dart';
-import 'package:easy_wallet/wallet_exception.dart';
 import 'package:easy_wallet/easy_wallet.dart';
 
 class WalletListController extends ValueNotifier<List<EasyWallet>> {
@@ -19,8 +17,10 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
   }
 
   WalletListController operator +(EasyWallet wallet) {
-    value.add(wallet); notifyListeners();
-
+    value.add(wallet);
+    walletManager.balance(wallet).whenComplete(() => notifyListeners());
+    notifyListeners();
+    
     return this;
   }
 

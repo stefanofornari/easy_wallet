@@ -7,6 +7,7 @@ import "package:easy_wallet/resources/constants.dart";
 import 'package:easy_wallet/ui/wallet_app.dart';
 
 import '../stubs/wallet_manager_stub.dart';
+import 'testing_utils.dart';
 
 Future<void> _showDialog(WidgetTester tester) async {
   await tester.pumpWidget(EasyWalletApp());
@@ -15,26 +16,8 @@ Future<void> _showDialog(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-//
-// TODO: replace with text()
-bool _findTextInCard(WidgetTester tester, Key key, String text) {
-  var texts = tester.widgetList(
-    find.descendant(of: find.byKey(key), matching: find.byType(RichText))
-  ).iterator;
-  while (texts.moveNext()) {
-    RichText t = texts.current as RichText;
-    if (t.text.toPlainText().contains(text)) {
-      return true;
-    }
-  }
-
-  return false;
-}
 
 void main() {
-
-  const String WALLET1 = "1234567890123456789012345678901234567890";
-  const String WALLET2 = "0123456789012345678901234567890123456789";
 
   testWidgets('main app has all ui elements', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
@@ -93,8 +76,7 @@ void main() {
   });
 
   testWidgets('existing address invalidates ok button', (WidgetTester tester) async {
-    await tester.pumpWidget(EasyWalletApp());
-    EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     home.state.controller + EasyWallet(WALLET1);
 
@@ -112,48 +94,35 @@ void main() {
   });
 
   testWidgets('adding/remove a wallet updates the cards view', (WidgetTester tester) async {
-    await tester.pumpWidget(EasyWalletApp());
-    EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     home.state.controller + EasyWallet(WALLET1);
     await tester.pumpAndSettle();
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
-    expect(_findTextInCard(tester, Key(WALLET1), WALLET1), true);
+    expect(findTextInCard(tester, Key(WALLET1), WALLET1), true);
     
     home.state.controller + EasyWallet(WALLET2);
     await tester.pump();
     expect(find.byType(Card), findsNWidgets(2));
     expect(find.byKey(Key(WALLET2)), findsOneWidget);
-    expect(_findTextInCard(tester, Key(WALLET2), WALLET2), true);
+    expect(findTextInCard(tester, Key(WALLET2), WALLET2), true);
 
     home.state.controller - WALLET2;
     await tester.pump();
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
-    expect(_findTextInCard(tester, Key(WALLET1), WALLET1), true);
+    expect(findTextInCard(tester, Key(WALLET1), WALLET1), true);
   });
   
 
   testWidgets('refresh shows updated balance', (WidgetTester tester) async {
-    await tester.pumpWidget(EasyWalletApp());
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     //
     // add a couple of wallets
     //
-    EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
     home.state.controller + EasyWallet(WALLET1) + EasyWallet(WALLET2);
-
-    //
-    // prepaare the stubbed WalletManager
-    //
-    WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTID1");
-
-    wm.argsMap = {
-      "0x" + WALLET1: "0xffaffaa4",
-      "0x" + WALLET2: "0xaa1010e5"
-    };
-    home.state.controller.walletManager = wm;
 
     //
     // trigger refresh
@@ -163,29 +132,22 @@ void main() {
     //
     // balances updated
     //
-    expect(_findTextInCard(tester, Key(WALLET1), "\n 0.000000004289723044"), true);
-    expect(_findTextInCard(tester, Key(WALLET2), "\n 0.000000002853179621"), true);
+    expect(findTextInCard(tester, Key(WALLET1), "\n 18.424220187167293"), true);
+    expect(findTextInCard(tester, Key(WALLET2), "\n 0.000000002853179621"), true);
   });
 
   testWidgets('refresh shows a message if connection error', (WidgetTester tester) async {
-    await tester.pumpWidget(EasyWalletApp());
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     //
-    // add a couple of wallets
+    // add a wallet
     //
-    EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
     home.state.controller + EasyWallet(WALLET1);
-
-    //
-    // prepaare the stubbed WalletManager
-    //
-    WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/PROJECTID1/SocketException");
-
-    home.state.controller.walletManager = wm;
 
     //
     // trigger refresh
     //
+    home.state.controller.walletManager = WalletManageWithStub("https://a.endpoint.io/PROJECTID1/SocketException");
     await tester.tap(find.byKey(KEY_REFRESH)); await tester.pump();
 
     //
@@ -194,6 +156,13 @@ void main() {
     expect(find.text(ERR_NETWORK_ERROR, findRichText: true), findsOneWidget);
   });
 
+  testWidgets('retrieves the current balance via walletManager', (WidgetTester tester) async {
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
+    home.state.controller + EasyWallet(WALLET1);
+  
+    await tester.pumpAndSettle();
+    expect(find.descendant(of: find.byKey(Key(WALLET1)), matching: find.text("\n 18.424220187167293", findRichText: true)), findsOneWidget);
+  });
   
 }

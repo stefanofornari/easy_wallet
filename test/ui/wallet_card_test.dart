@@ -4,19 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/ui/wallet_app.dart';
 
+import 'testing_utils.dart';
+
 void main() {
 
-  const String ADDRESS = "1234567890123456789012345678901234567890";
-
   testWidgets('delete card action', (WidgetTester tester) async {
-    await tester.pumpWidget(EasyWalletApp());
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
-    EasyWalletHomePage home = tester.widget(find.byType(EasyWalletHomePage));
+    home.state.controller + EasyWallet(WALLET1);
+    await tester.pumpAndSettle();
 
-    home.state.controller + EasyWallet(ADDRESS);
-    await tester.pump();
-
-    var button = find.descendant(of: find.byKey(Key(ADDRESS)), matching: find.byIcon(Icons.delete));
+    var button = find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byIcon(Icons.delete));
     expect(button, findsOneWidget);
 
     await tester.tap(button);

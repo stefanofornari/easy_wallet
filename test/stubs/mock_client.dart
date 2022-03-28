@@ -48,7 +48,6 @@ class MockClient extends BaseClient {
         return Response("HTTP status $code", int.parse(code));
       }
     }
-
     
     return _buildResponse(body, data, 200);
   }

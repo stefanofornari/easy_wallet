@@ -65,6 +65,5 @@ void main() {
       return;
     }
     fail("no WalletException");
- 
   });
 }

@@ -28,6 +28,8 @@ class WalletManager {
       throw WalletException(ERR_CONTENT_ERROR);
     }
 
+    print("1) ${wallet.address}'s balance is now ${wallet.balance}");
+
   }
 
   Client getHttpClient() {
