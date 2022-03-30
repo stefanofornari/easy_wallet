@@ -18,13 +18,17 @@ late EasyWalletApp app;
 
 FileSystem fs = const LocalFileSystem();
 
+File getConfigFile() {
+  File configDir = fs.file(path.join(APPDATA, "ste.easy_wallet"));
+  return fs.file(path.join(configDir.path, "preferences.json"));
+}
+
 void main() {
 
   //
   // read the configuration and store it in memory
   //
-  File configDir = fs.file(path.join(APPDATA, "ste.easy_wallet"));
-  File configFile = fs.file(path.join(configDir.path, "preferences.json"));
+  File configFile = getConfigFile();
 
   print("configFile: $configFile");
 

@@ -11,8 +11,7 @@ import 'package:easy_wallet/resources/constants.dart';
 
 
 void _givenConfiguration(FileSystem fs, Map config) {
-  File configDir = fs.file(path.join(Platform.environment["HOME"] ?? ".", ".local/share/ste.easy_wallet"));
-  File configFile = fs.file(path.join(configDir.path, "preferences.json"));
+  File configFile = ew.getConfigFile();
 
   configFile.createSync(recursive: true);
   configFile.writeAsStringSync(json.encoder.convert(config));
@@ -22,6 +21,10 @@ void main() {
 
   testWidgets('preferences directory default', (WidgetTester tester) async {
     expect(ew.APPDATA, "${Platform.environment["HOME"]}/.local/share");
+  });
+
+  testWidgets('get the preferences file', (WidgetTester tester) async {
+    expect(ew.getConfigFile().path, "${ew.APPDATA}${path.separator}ste.easy_wallet${path.separator}preferences.json");
   });
 
   testWidgets('read configuration at startup', (WidgetTester tester) async {
@@ -45,6 +48,14 @@ void main() {
   });
 
   testWidgets('empty preferences if no config file', (WidgetTester tester) async {
+    MemoryFileSystem fs = MemoryFileSystem.test();
+    
+    ew.fs = fs;
+    ew.main();
+    expect(ew.preferences, {});
+  });
+
+  testWidgets('get the preferences file', (WidgetTester tester) async {
     MemoryFileSystem fs = MemoryFileSystem.test();
     
     ew.fs = fs;
