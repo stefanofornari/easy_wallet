@@ -93,7 +93,7 @@ void main() {
     expect(btnok.enabled, isFalse);
   });
 
-  testWidgets('adding/remove a wallet updates the cards view', (WidgetTester tester) async {
+  testWidgets('adding/removing a wallet updates the cards view', (WidgetTester tester) async {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     home.state.controller + EasyWallet(WALLET1);
@@ -113,8 +113,7 @@ void main() {
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
     expect(findTextInCard(tester, Key(WALLET1), WALLET1), true);
-  });
-  
+  });  
 
   testWidgets('refresh shows updated balance', (WidgetTester tester) async {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
