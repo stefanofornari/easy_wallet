@@ -4,6 +4,7 @@ import "package:easy_wallet/resources/constants.dart";
 import "package:easy_wallet/ui/add_wallet_dialog.dart";
 
 import "package:easy_wallet/easy_wallet.dart";
+import 'package:easy_wallet/main.dart' as ew;
 import "package:easy_wallet/wallet_exception.dart";
 import "package:easy_wallet/ui/wallet_card.dart";
 import "package:easy_wallet/ui/wallet_list_controller.dart";
@@ -33,12 +34,17 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
 
   void _onChange() async {
     setState(() {});
+    //
+    // TODO: to be isolated in a Application controller...
+    //
+    ew.preferences.wallets = controller.value;
+    ew.savePreferences();
   }
 
   @override
   void initState() {
     super.initState();
-    controller.value.clear();
+    controller.value = ew.preferences.wallets;
     controller.addListener(_onChange);
   }
 

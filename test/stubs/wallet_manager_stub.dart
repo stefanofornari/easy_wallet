@@ -16,9 +16,6 @@ class WalletManageWithStub extends WalletManager {
       if (method == "eth_getBalance") {
         if (data != null) {
           List args = data as List;
-
-          print("$args");
-
           return argsMap[args.first];
         }
       }

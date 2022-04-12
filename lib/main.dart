@@ -8,12 +8,13 @@ import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
 import 'package:window_size/window_size.dart';
 
+import 'package:easy_wallet/preferences.dart';
 import 'package:easy_wallet/ui/wallet_app.dart';
 
 final String APPDATA = Platform.environment["APPDATA"]
                        ?? (Platform.environment["HOME"] ?? ".") + path.separator + ".local" + path.separator + "share";
 
-Map<String, String> preferences = const {};
+Preferences preferences = Preferences();
 late EasyWalletApp app;
 
 FileSystem fs = const LocalFileSystem();
@@ -23,28 +24,29 @@ File getConfigFile() {
   return fs.file(path.join(configDir.path, "preferences.json"));
 }
 
-void main() {
-
-  //
-  // read the configuration and store it in memory
-  //
+///
+// read the configuration and store it in memory
+//
+void readPreferences() {
   File configFile = getConfigFile();
 
-  print("configFile: $configFile");
-
-  if (!configFile.existsSync()) {
-    preferences = {};
-  } else {
+  if (configFile.existsSync()) {
     final String configJson = configFile.readAsStringSync();
     if (configJson.isNotEmpty) {
-      final Object? data = json.decode(configJson);
-      if (data is Map) {
-        preferences = data.cast<String, String>();
-      }
+      preferences = Preferences.fromJson(configJson);
+    } else {
+      preferences = Preferences();
     }
   }
+}
 
-  print("Preferences: $preferences");
+void savePreferences() {
+  getConfigFile().writeAsStringSync(json.encoder.convert(preferences));
+}
+
+void main() {
+
+  readPreferences();
 
   runApp(app = EasyWalletApp());
   getWindowInfo().then((window) {

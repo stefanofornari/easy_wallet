@@ -1,5 +1,4 @@
 
-import 'package:easy_wallet/resources/constants.dart';
 import "package:flutter/material.dart";
 
 import 'package:easy_wallet/main.dart' as ew;
@@ -10,9 +9,9 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
 
   late WalletManager walletManager;
 
-  WalletListController() : super(<EasyWallet>[]) {
+  WalletListController() : super([]) {
     walletManager = WalletManager(
-      (ew.preferences[KEY_CFG_ENDPOINT] ?? "") + "/" + (ew.preferences[KEY_CFG_APPKEY] ?? "")
+      ew.preferences.endpoint + "/" + ew.preferences.appkey
     );
   }
 
@@ -20,7 +19,7 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
     value.add(wallet);
     walletManager.balance(wallet).whenComplete(() => notifyListeners());
     notifyListeners();
-    
+
     return this;
   }
 

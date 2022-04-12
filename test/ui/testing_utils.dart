@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:easy_wallet/main.dart';
 import 'package:easy_wallet/ui/wallet_app.dart';
 
 import '../stubs/wallet_manager_stub.dart';
@@ -9,6 +10,7 @@ const String WALLET1 = "1234567890123456789012345678901234567890";
 const String WALLET2 = "0123456789012345678901234567890123456789";
 
 Future<EasyWalletHomePage> givenWlalletManagerStub(WidgetTester tester) async {
+  readPreferences();
   await tester.pumpWidget(EasyWalletApp());
     
   //
@@ -33,7 +35,6 @@ bool findTextInCard(WidgetTester tester, Key key, String text) {
   ).iterator;
   while (texts.moveNext()) {
     RichText t = texts.current as RichText;
-    print(t);
     if (t.text.toPlainText().contains(text)) {
       return true;
     }

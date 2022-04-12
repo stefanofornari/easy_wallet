@@ -1,6 +1,8 @@
-import 'dart:io';
+import 'dart:convert' show json;
 
-import 'package:easy_wallet/resources/constants.dart';
+import 'package:file/file.dart';
+import 'package:file/memory.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -20,11 +22,24 @@ void main() {
   WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTKEY1");;
   WalletListController C = WalletListController();
 
+  //
+  // Setup the following components:
+  // 1. A memory file system with the directory structure and file containing
+  //    the preferences
+  // 2. Some default preferences
+  // 3. The staub to use as WalletManager with fake network access
+  //
   setUp(() {
-    ew.preferences = const {
-      KEY_CFG_ENDPOINT: "https://a.endpoint.io/v3",
-      KEY_CFG_APPKEY: "PROJECTKEY1"
-    };
+    ew.fs = MemoryFileSystem.test();
+    File configFile = ew.getConfigFile();
+
+    configFile.createSync(recursive: true);
+    
+    ew.preferences.endpoint = "https://a.endpoint.io/v3";
+    ew.preferences.appkey = "PROJECTKEY1";
+      KEY_CFG_APPKEY: 
+    configFile.writeAsStringSync(json.encoder.convert(ew.preferences));
+
     wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTKEY1");;
     C = WalletListController();
     wm.argsMap = {

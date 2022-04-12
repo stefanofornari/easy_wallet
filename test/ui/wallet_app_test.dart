@@ -1,6 +1,11 @@
+import 'dart:convert' show json;
+import 'package:file/file.dart';
+import 'package:file/memory.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:easy_wallet/main.dart' as ew;
 import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/wallet_manager.dart';
 import "package:easy_wallet/resources/constants.dart";
@@ -18,6 +23,15 @@ Future<void> _showDialog(WidgetTester tester) async {
 
 
 void main() {
+
+  setUp(() {
+    ew.fs = MemoryFileSystem.test();
+    File configFile = ew.getConfigFile();
+
+    configFile.createSync(recursive: true);
+    
+    configFile.writeAsStringSync("{}");
+  });
 
   testWidgets('main app has all ui elements', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
@@ -162,6 +176,18 @@ void main() {
   
     await tester.pumpAndSettle();
     expect(find.descendant(of: find.byKey(Key(WALLET1)), matching: find.text("\n 18.424220187167293", findRichText: true)), findsOneWidget);
+  });
+
+  testWidgets('+/- walltes updates the configuration', (WidgetTester tester) async {
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
+    home.state.controller + EasyWallet(WALLET1);
+
+    File configFile = ew.getConfigFile();
+    var config = json.decoder.convert(
+      configFile.readAsStringSync()
+    );
+    expect(config["wallets"].length, 1);
+    expect(config["wallets"][0]["address"], WALLET1);
   });
   
 }
