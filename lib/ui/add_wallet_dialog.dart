@@ -1,7 +1,10 @@
+import 'package:easy_wallet/resources/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_wallet/ui/wallet_list_controller.dart';
 import 'package:easy_wallet/ui/address_editing_controller.dart';
+
+enum AddWalletBy { address, privateKey }
 
 
 class AddWalletDialog extends StatefulWidget {
@@ -19,6 +22,8 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
   _AddWalletDialogState(this.listController) {}
 
   final AddressEditingController addressController = AddressEditingController();
+
+  AddWalletBy? _addWalletBy = AddWalletBy.address;
 
   @override
   void initState() {
@@ -40,7 +45,33 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
               title: const Text('Add public wallet'),
               content: Wrap(
                 children: [
-                  Text("Insert the 20 hex bytes public address:"),
+                  Row(children: [
+                    Radio<AddWalletBy>(
+                      key: KEY_WALLET_BY_ADDRESS,
+                      value: AddWalletBy.address,
+                      groupValue: _addWalletBy,
+                      onChanged: (AddWalletBy? value) {
+                        setState(() {
+                          _addWalletBy = value;
+                        });
+                      }
+                    ),
+                    Text("address"), 
+                    SizedBox(width: 25),
+                    Radio<AddWalletBy>(
+                      key: KEY_WALLET_BY_PRIVATE_KEY,
+                      value: AddWalletBy.privateKey,
+                      groupValue: _addWalletBy,
+                      onChanged: (AddWalletBy? value) {
+                        setState(() {
+                          _addWalletBy = value;
+                        });
+                      }
+                    ),
+                    Text("private key"), 
+                  ]),
+                  SizedBox(height: 75),
+                  Text((_addWalletBy == AddWalletBy.address) ? LABEL_ADDRESS : LABEL_PRIVATE_KEY),
                   TextField(
                     controller: addressController,
                     maxLength: 40,
@@ -48,9 +79,9 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
                       setState(() {});
                     },
                     decoration: InputDecoration(
-                        hintText: "eg: 00000000219ab540356cBB839Cbe05303d7705Fa"),
+                    hintText: (_addWalletBy == AddWalletBy.address) ? LABEL_ADDRESS_HINT: LABEL_PRIVATE_KEY_HINT),
                   ),
-                ],
+                ]
               ),
               actions: <Widget>[
                 TextButton(

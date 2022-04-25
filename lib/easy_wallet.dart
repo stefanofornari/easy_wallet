@@ -7,10 +7,15 @@ class EasyWallet {
 
   BigDecimal balance;
 
+  EasyWallet(this.address) : balance = BigDecimal.parse("0.0");
+
+  factory EasyWallet.fromPrivateKey(String key) {
+    return EasyWallet(EthPrivateKey.fromHex(key).address.hex);
+  }
+
   String get readableBalance {
     EtherAmount amount = EtherAmount.fromUnitAndValue(EtherUnit.wei, balance.intVal);
     return Decimal.parse(amount.getValueInUnit(EtherUnit.ether).toString()).toString();
   }
 
-  EasyWallet(this.address) : balance = BigDecimal.parse("0.0");
 }
