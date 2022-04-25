@@ -4,10 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:easy_wallet/main.dart';
 import 'package:easy_wallet/ui/wallet_app.dart';
 
+import '../testing_constants.dart';
 import '../stubs/wallet_manager_stub.dart';
-
-const String WALLET1 = "1234567890123456789012345678901234567890";
-const String WALLET2 = "0123456789012345678901234567890123456789";
 
 Future<EasyWalletHomePage> givenWlalletManagerStub(WidgetTester tester) async {
   readPreferences();

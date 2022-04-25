@@ -5,11 +5,8 @@ import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/wallet_manager.dart';
 import 'package:easy_wallet/wallet_exception.dart';
 
+import 'testing_constants.dart';
 import 'stubs/wallet_manager_stub.dart';
-
-const String WALLET1 = "0x00000000219ab540356cbb839cbe05303d7705fa";
-const String WALLET2 = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
-
 
 void main() {
 
@@ -21,18 +18,18 @@ void main() {
   });
 
   test('get wallet balance', () async {
-    EasyWallet w = EasyWallet(WALLET1);
+    EasyWallet w = EasyWallet(ADDRESS3);
     WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTID1");
 
     wm.argsMap = {
-      WALLET1: "0x7baa706cf4a4220055045",
-      WALLET2: "0x647DC0901C745DB420913"
+      ADDRESS3: "0x7baa706cf4a4220055045",
+      ADDRESS4: "0x647DC0901C745DB420913"
     };
 
     await wm.balance(w);
     expect(w.balance, BigDecimal.parse("9343922000069000000000069"));
 
-    w = EasyWallet(WALLET2);
+    w = EasyWallet(ADDRESS4);
     await wm.balance(w);
     expect(w.balance, BigDecimal.parse("7592901870686660123035923"));
   });
@@ -41,7 +38,7 @@ void main() {
     WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECT/SocketException");
 
     try {
-      await wm.balance(EasyWallet(WALLET1));
+      await wm.balance(EasyWallet(ADDRESS3));
     } on WalletException catch(e) {
       expect(e.message, ERR_NETWORK_ERROR);
       return;
@@ -53,12 +50,12 @@ void main() {
   test('turn http errors into WalletException', () async {
     WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECT/HttpStatus/404");
     wm.argsMap = {
-      WALLET1: "0x7baa706cf4a4220055045",
-      WALLET2: "0x647DC0901C745DB420913"
+      ADDRESS3: "0x7baa706cf4a4220055045",
+      ADDRESS4: "0x647DC0901C745DB420913"
     };
 
     try {
-      await wm.balance(EasyWallet(WALLET1));
+      await wm.balance(EasyWallet(ADDRESS3));
     } on WalletException catch(e) {
       expect(e.message, ERR_CONTENT_ERROR);
       return;

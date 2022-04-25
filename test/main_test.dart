@@ -11,7 +11,7 @@ import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/main.dart' as ew;
 import 'package:easy_wallet/preferences.dart';
 
-import 'ui/testing_utils.dart';
+import 'testing_constants.dart';
 
 
 void _givenConfiguration(Preferences config) {

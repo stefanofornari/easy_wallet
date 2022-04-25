@@ -8,6 +8,7 @@ import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/main.dart' as ew;
 import 'package:easy_wallet/ui/wallet_app.dart';
 
+import '../testing_constants.dart';
 import 'testing_utils.dart';
 
 void main() {

@@ -10,6 +10,7 @@ import "package:easy_wallet/resources/constants.dart";
 import 'package:easy_wallet/ui/add_wallet_dialog.dart';
 import 'package:easy_wallet/ui/wallet_app.dart';
 
+import '../testing_constants.dart';
 import 'testing_utils.dart';
 
 Future<void> _showDialog(WidgetTester tester) async {
