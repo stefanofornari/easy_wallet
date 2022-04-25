@@ -1,3 +1,4 @@
+import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/resources/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -21,20 +22,20 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
 
   _AddWalletDialogState(this.listController) {}
 
-  final AddressEditingController addressController = AddressEditingController();
+  final WalletEditingController walletController = WalletEditingController();
 
   AddWalletBy? _addWalletBy = AddWalletBy.address;
 
   @override
   void initState() {
     super.initState();
-    addressController.clear();
+    walletController.clear();
   }
 
   @override
   void dispose() {
     super.dispose();
-    addressController.dispose();
+    walletController.dispose();
   }
 
   @override
@@ -73,8 +74,8 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
                   SizedBox(height: 75),
                   Text((_addWalletBy == AddWalletBy.address) ? LABEL_ADDRESS : LABEL_PRIVATE_KEY),
                   TextField(
-                    controller: addressController,
-                    maxLength: 40,
+                    controller: walletController,
+                    maxLength: (_addWalletBy == AddWalletBy.address) ? 40 : 80,
                     onChanged: (value) {
                       setState(() {});
                     },
@@ -87,7 +88,7 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
                 TextButton(
                   child: const Text('CANCEL'),
                   onPressed: () {
-                    addressController.clear();
+                    walletController.clear();
                     setState(() {
                       Navigator.pop(context, "");
                     });
@@ -95,9 +96,12 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
                 ),
                 TextButton(
                   child: const Text('OK'),
-                  onPressed: !_validate(addressController.value.text) ? null : () {
-                    Navigator.pop(context, addressController.value.text);
-                    addressController.clear();
+                  onPressed: !_validate() ? null : () {
+                    Navigator.pop(
+                      context, 
+                      (_addWalletBy == AddWalletBy.address) ? walletController.value.text : walletController.key2address()
+                    );
+                    walletController.clear();
                   }
                 )
               ],
@@ -106,10 +110,16 @@ class _AddWalletDialogState extends State<AddWalletDialog> {
         );
   }
 
-  bool _validate(String address) {
+  bool _validate() {
+    //
+    // If the key is invalid key2adress returns an empty address...
+    //
+    String address = (_addWalletBy == AddWalletBy.address) 
+                  ? walletController.value.text
+                  : walletController.key2address();
     return 
-      addressController.isValidAddress(addressController.value.text) 
+      walletController.isValidAddress(address) 
       &&
-      listController.isValidAddress(addressController.value.text);
+      listController.isValidAddress(address);
   }
 }

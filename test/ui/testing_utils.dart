@@ -19,7 +19,8 @@ Future<EasyWalletHomePage> givenWlalletManagerStub(WidgetTester tester) async {
 
   wm.argsMap = {
     "0x" + WALLET1: "0xffaffaa4ffaffaa4",
-    "0x" + WALLET2: "0xaa1010e5"
+    "0x" + WALLET2: "0xaa1010e5",
+    ADDRESS1: "0xa0affaa4ffaffa50"
   };
   home.state.controller.walletManager = wm;
   // ---

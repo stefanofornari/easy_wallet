@@ -118,6 +118,21 @@ void main() {
     expect(btnok.enabled, isTrue);
   });
 
+  testWidgets('valid private key enables ok button', (WidgetTester tester) async {
+    await _showDialog(tester);
+    await tester.tap(find.byKey(KEY_WALLET_BY_PRIVATE_KEY)); 
+    await tester.pumpAndSettle();
+    
+    await tester.enterText(
+      find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
+      PRIVATE_KEY1
+    );
+    await tester.pump();
+
+    TextButton btnok = tester.widget<TextButton>(find.ancestor(of: find.text("OK"), matching: find.byType(TextButton)));
+    expect(btnok.enabled, isTrue);
+  });
+
   testWidgets('invalid address invalidates ok button', (WidgetTester tester) async {
     await _showDialog(tester);
     
@@ -128,6 +143,30 @@ void main() {
     await tester.pump();
 
     TextButton btnok = tester.widget<TextButton>(find.ancestor(of: find.text("OK"), matching: find.byType(TextButton)));
+    expect(btnok.enabled, isFalse);
+  });
+
+  testWidgets('invalid private key invalidates ok button', (WidgetTester tester) async {
+    await _showDialog(tester);
+    await tester.tap(find.byKey(KEY_WALLET_BY_PRIVATE_KEY)); 
+    await tester.pumpAndSettle();
+    
+    await tester.enterText(
+      find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
+      "00a"
+    );
+    await tester.pump();
+
+    TextButton btnok = tester.widget<TextButton>(find.ancestor(of: find.text("OK"), matching: find.byType(TextButton)));
+    expect(btnok.enabled, isFalse);
+
+    await tester.enterText(
+      find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
+      "0123456789001234567890012345678900123456789001234567890"  // not an address not a private key
+    );
+    await tester.pump();
+
+    btnok = tester.widget<TextButton>(find.ancestor(of: find.text("OK"), matching: find.byType(TextButton)));
     expect(btnok.enabled, isFalse);
   });
 
@@ -142,6 +181,26 @@ void main() {
     await tester.enterText(
       find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
       WALLET1
+    );
+    await tester.pump();
+
+    TextButton btnok = tester.widget<TextButton>(find.ancestor(of: find.text("OK"), matching: find.byType(TextButton)));
+    expect(btnok.enabled, isFalse);
+  });
+
+  testWidgets('existing address from private key invalidates ok button', (WidgetTester tester) async {
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
+
+    home.state.controller + EasyWallet(ADDRESS1.substring(2));
+
+    await tester.pumpAndSettle();
+    await _showDialog(tester);
+    await tester.tap(find.byKey(KEY_WALLET_BY_PRIVATE_KEY)); 
+    await tester.pumpAndSettle();
+    
+    await tester.enterText(
+      find.descendant(of: find.byType(Dialog), matching: find.byType(TextField)),
+      PRIVATE_KEY1
     );
     await tester.pump();
 

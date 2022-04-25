@@ -9,7 +9,7 @@ void main() {
   const String W3 = "3333333333333333333333333333333333333333";
   
   test("exactly 40 characters", () {
-    final AddressEditingController c = AddressEditingController();
+    final WalletEditingController c = WalletEditingController();
 
     expect(c.isValidAddress(""), false);
     expect(c.isValidAddress("000111"), false);
@@ -17,7 +17,7 @@ void main() {
   });
 
   test("no hex address is invalid", () {
-    final AddressEditingController c = AddressEditingController();
+    final WalletEditingController c = WalletEditingController();
 
     expect(c.isValidAddress("000GHI030405060708090A0B0C0D0E0F10111213"), false);
   });
