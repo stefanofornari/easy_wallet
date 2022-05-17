@@ -118,7 +118,7 @@ void main() {
     expect(find.descendant(of: find.byKey(Key(WALLET1)), matching: find.text("\n 18.424220187167293", findRichText: true)), findsOneWidget);
   });
 
-  testWidgets('+/- walltes updates the configuration', (WidgetTester tester) async {
+  testWidgets('+/- wallets updates the configuration', (WidgetTester tester) async {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
     home.state.controller + EasyWallet(WALLET1);
 
