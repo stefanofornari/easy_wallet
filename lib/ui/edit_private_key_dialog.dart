@@ -61,7 +61,7 @@ class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
                     child: const Text("-- or ---"),
                   ),
                   SizedBox(height: 40),
-                  Text(LABEL_PRIVATE_KEY),
+                  Text(_isPrivateKeyEnabled() ? LABEL_PRIVATE_KEY : LABEL_PRIVATE_KEY_MNEMONIC),
                   TextField(
                     key: KEY_PRIVATE_KEY,
                     maxLength: 64,
@@ -71,7 +71,7 @@ class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
                     },
                     enabled: _isPrivateKeyEnabled(),
                     decoration: InputDecoration(
-                      hintText: (LABEL_PRIVATE_KEY_HINT)
+                      hintText: (_isPrivateKeyEnabled() ? LABEL_PRIVATE_KEY_HINT: "")
                     ),
                   )
                 ]
@@ -112,9 +112,6 @@ class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
   }
 
   void _setPrivateKeyIfValidPassphrase(value) {
-    String? key = passphraseController.privateKey(wallet.address);
-    if (key != null) {
-      keyController.text = key;
-    }
+    keyController.text = passphraseController.privateKey(wallet.address);
   }
 }

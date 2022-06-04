@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:bip39/bip39.dart' as bip39;
-
 import 'package:easy_wallet/utils.dart';
 
 class MnemonicEditingController extends TextEditingController {
@@ -10,12 +8,14 @@ class MnemonicEditingController extends TextEditingController {
     return isValidMnemonic(value.text);
   }
 
-  String? privateKey(String address) {
-    if (!isValidMnemonicPhrase()) {
-      return null;
+  String privateKey(String address) {
+    String key = "";
+
+    if (isValidMnemonicPhrase()) {
+      key = mnemonicToPrivateKey(value.text, address) ?? "";
     }
 
-    return mnemonicToPrivateKey(value.text, address);
+    return key;
   }
 
 }
