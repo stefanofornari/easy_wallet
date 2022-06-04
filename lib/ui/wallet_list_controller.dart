@@ -18,8 +18,9 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
   WalletListController operator +(EasyWallet wallet) {
     value.add(wallet);
     walletManager.balance(wallet).whenComplete(() => notifyListeners());
-    notifyListeners();
 
+    _savePreferences();
+    
     return this;
   }
 
@@ -30,7 +31,7 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
     });
 
     if (value.length != l) {
-      notifyListeners();
+      _savePreferences();
     }
 
     return this;
@@ -46,5 +47,10 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
     return !value.any((element) {
       return element.address == address;
     });
+  }
+
+  _savePreferences() {
+    ew.preferences.wallets = value;
+    ew.savePreferences();
   }
 }

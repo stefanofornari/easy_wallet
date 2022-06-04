@@ -26,7 +26,7 @@ void main() {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     home.state.controller + EasyWallet(WALLET1);
-    await tester.pumpAndSettle();
+    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
 
     var card = find.byKey(Key(WALLET1));
     expect(
@@ -43,7 +43,7 @@ void main() {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     home.state.controller + EasyWallet(WALLET1);
-    await tester.pumpAndSettle();
+    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
 
     var button = find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byIcon(Icons.delete));
     
@@ -57,7 +57,7 @@ void main() {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     home.state.controller + EasyWallet(WALLET1);
-    await tester.pumpAndSettle();
+    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
 
     var button = find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byIcon(Icons.lock_open));
     

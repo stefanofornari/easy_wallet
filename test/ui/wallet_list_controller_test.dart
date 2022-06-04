@@ -37,7 +37,6 @@ void main() {
     
     ew.preferences.endpoint = "https://a.endpoint.io/v3";
     ew.preferences.appkey = "PROJECTKEY1";
-      KEY_CFG_APPKEY: 
     configFile.writeAsStringSync(json.encoder.convert(ew.preferences));
 
     wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTKEY1");
@@ -83,28 +82,6 @@ void main() {
     C - W3;
     expect(C.value.length, 0);
 
-  });
-
-  test('call back the listeners upon changes', () {
-    bool fired = false;
-
-    C.addListener(() { fired = true; });
-
-    //
-    // do not fire if empty
-    //
-    C - W1;
-    expect(fired, false);
-    
-    C + EasyWallet(W1);
-    expect(fired, true);
-    
-    fired = false; C - W1;
-    expect(fired, true);
-
-    C + EasyWallet(W1); fired = false;
-    C - W2; // not in the list, do not fire a change
-    expect(fired, false);
   });
 
   test('valid address is not in the list', () {

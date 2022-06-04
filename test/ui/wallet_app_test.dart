@@ -50,19 +50,24 @@ void main() {
   testWidgets('adding/removing a wallet updates the cards view', (WidgetTester tester) async {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
+    var homeFinder = find.byType(EasyWalletHomePage);
+
     home.state.controller + EasyWallet(WALLET1);
+    tester.state(homeFinder).setState(() {});
     await tester.pumpAndSettle();
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
     expect(findTextInCard(tester, Key(WALLET1), WALLET1), true);
     
     home.state.controller + EasyWallet(WALLET2);
+    tester.state(homeFinder).setState(() {});
     await tester.pump();
     expect(find.byType(Card), findsNWidgets(2));
     expect(find.byKey(Key(WALLET2)), findsOneWidget);
     expect(findTextInCard(tester, Key(WALLET2), WALLET2), true);
 
     home.state.controller - WALLET2;
+    tester.state(homeFinder).setState(() {});
     await tester.pump();
     expect(find.byType(Card), findsOneWidget);
     expect(find.byKey(Key(WALLET1)), findsOneWidget);
@@ -76,6 +81,7 @@ void main() {
     // add a couple of wallets
     //
     home.state.controller + EasyWallet(WALLET1) + EasyWallet(WALLET2);
+    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
 
     //
     // trigger refresh
@@ -113,8 +119,8 @@ void main() {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
     home.state.controller + EasyWallet(WALLET1);
+    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
   
-    await tester.pumpAndSettle();
     expect(find.descendant(of: find.byKey(Key(WALLET1)), matching: find.text("\n 18.424220187167293", findRichText: true)), findsOneWidget);
   });
 

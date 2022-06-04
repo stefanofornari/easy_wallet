@@ -21,7 +21,7 @@ void main() {
     EasyWallet wallet = EasyWallet(ADDRESS3.substring(2));
 
     home.state.controller + wallet;
-    await tester.pumpAndSettle();
+    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
 
     var button = find.descendant(of: find.byKey(Key(ADDRESS3.substring(2))), matching: find.byIcon(Icons.lock_open));
     

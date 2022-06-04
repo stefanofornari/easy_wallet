@@ -32,20 +32,10 @@ class EasyWalletHomePage extends StatefulWidget {
 class _EasyWalletState extends State<EasyWalletHomePage> {
   final WalletListController controller = WalletListController();
 
-  void _onChange() async {
-    setState(() {});
-    //
-    // TODO: to be isolated in a Application controller...
-    //
-    ew.preferences.wallets = controller.value;
-    ew.savePreferences();
-  }
-
   @override
   void initState() {
     super.initState();
     controller.value = ew.preferences.wallets;
-    controller.addListener(_onChange);
   }
 
   @override
@@ -102,6 +92,7 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
           if (address.isNotEmpty) {
             controller + EasyWallet(address);
           }
+          setState(() {});
         },
       ),
     );
@@ -135,7 +126,10 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
 
     for (var wallet in controller.value) {
       cards.add(
-        WalletCard(wallet, () {controller - wallet.address;})
+        WalletCard(wallet, () {
+          controller - wallet.address;
+          setState(() {});
+        })
       );
     }
 
