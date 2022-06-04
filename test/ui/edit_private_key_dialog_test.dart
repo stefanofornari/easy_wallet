@@ -28,6 +28,7 @@ void main() {
     await tester.tap(button);
     await tester.pumpAndSettle();
 
+    return find.byType(Dialog);
   }
 
   setUp(() {
@@ -44,9 +45,7 @@ void main() {
   });
 
   testWidgets('edit private key UI', (WidgetTester tester) async {
-    await _showDialog(tester);
-
-    var dialog = find.byType(Dialog);
+    var dialog = await _showDialog(tester);
 
     expect(
       find.descendant(of: dialog, matching: find.textContaining(ADDRESS3.substring(2))),
@@ -63,19 +62,18 @@ void main() {
   });
 
   testWidgets('close add wallet dialog by cancel', (WidgetTester tester) async {
-    await _showDialog(tester);
+    var dialog = await _showDialog(tester);
 
-    expect(find.byType(Dialog), findsOneWidget);
-    await tester.tap(find.descendant(
-        of: find.byType(Dialog), matching: find.text("CANCEL")));
+    expect(dialog, findsOneWidget);
+    await tester.tap(find.descendant(of: dialog, matching: find.text("CANCEL")));
     await tester.pumpAndSettle();
-    expect(find.byType(Dialog), findsNothing);
+    expect(dialog, findsNothing);
   });
 
   testWidgets('valid private key enables ok button', (WidgetTester tester) async {
-    await _showDialog(tester);
+    var dialog  = await _showDialog(tester);
     
-    var textField = find.descendant(of: find.byType(Dialog), matching: find.byKey(KEY_PRIVATE_KEY));
+    var textField = find.descendant(of: dialog, matching: find.byKey(KEY_PRIVATE_KEY));
 
     await tester.enterText(
       textField,
@@ -89,23 +87,23 @@ void main() {
 
 
   testWidgets('close the dialog when pressing ok', (WidgetTester tester) async {
-    await _showDialog(tester);
+    var dialog = await _showDialog(tester);
     
-    var textField = find.descendant(of: find.byType(Dialog), matching: find.byKey(KEY_PRIVATE_KEY));
+    var textField = find.descendant(of: dialog, matching: find.byKey(KEY_PRIVATE_KEY));
 
     await tester.enterText(textField, PRIVATE_KEY3);
     await tester.pump();
 
-    await tester.tap(find.descendant(of: find.byType(Dialog), matching: find.text("OK")));
+    await tester.tap(find.descendant(of: dialog, matching: find.text("OK")));
     await tester.pumpAndSettle();
-    expect(find.byType(Dialog), findsNothing);
+    expect(dialog, findsNothing);
   });
 
   testWidgets('invalid private key invalidates ok button', (WidgetTester tester) async {
-    await _showDialog(tester);
+    var dialog = await _showDialog(tester);
     
     await tester.enterText(
-      find.descendant(of: find.byType(Dialog), matching: find.byKey(KEY_PRIVATE_KEY)),
+      find.descendant(of: dialog, matching: find.byKey(KEY_PRIVATE_KEY)),
       "00a"
     );
     await tester.pump();
@@ -114,7 +112,7 @@ void main() {
     expect(btnok.enabled, isFalse);
 
     await tester.enterText(
-      find.descendant(of: find.byType(Dialog), matching: find.byKey(KEY_PRIVATE_KEY)),
+      find.descendant(of: dialog, matching: find.byKey(KEY_PRIVATE_KEY)),
       "0123456789001234567890012345678900123456789001234567890"  // not a private key
     );
     await tester.pump();
@@ -124,14 +122,14 @@ void main() {
   });
 
   testWidgets('disable private key if mnemonic phrase is not empty', (WidgetTester tester) async {
-    await _showDialog(tester);
+    var dialog = await _showDialog(tester);
 
     TextField key = tester.widget<TextField>(find.byKey(KEY_PRIVATE_KEY));
 
     expect(key.enabled, isTrue);
     
     await tester.enterText(
-      find.descendant(of: find.byType(Dialog), matching: find.byKey(KEY_MNEMONIC_PHRASE)),
+      find.descendant(of: dialog, matching: find.byKey(KEY_MNEMONIC_PHRASE)),
       "a"
     );
     await tester.pump();
@@ -140,7 +138,7 @@ void main() {
     expect(key.enabled, isFalse);
 
     await tester.enterText(
-      find.descendant(of: find.byType(Dialog), matching: find.byKey(KEY_MNEMONIC_PHRASE)),
+      find.descendant(of: dialog, matching: find.byKey(KEY_MNEMONIC_PHRASE)),
       ""
     );
     await tester.pump();
@@ -149,40 +147,32 @@ void main() {
     expect(key.enabled, isTrue);
   });
 
-  testWidgets('replace private key when mnemonic phrase is valid', (WidgetTester tester) async {
-    await _showDialog(tester);
+  testWidgets('clear private key when mnemonic phrase is invalid', (WidgetTester tester) async {
+    var dialog = await _showDialog(tester);
 
-    TextField key = tester.widget<TextField>(find.byKey(KEY_PRIVATE_KEY));
-
-    expect(key.enabled, isTrue);
+    var keyFinder = find.byKey(KEY_PRIVATE_KEY);
+    TextField keyField = tester.widget<TextField>(keyFinder);
+    await tester.enterText(keyFinder, "some text"); await tester.pump();
 
     //
     // invalid passphrase
     //
     await tester.enterText(
-      find.descendant(of: find.byType(Dialog), matching: find.byKey(KEY_MNEMONIC_PHRASE)),
+      find.descendant(of: dialog, matching: find.byKey(KEY_MNEMONIC_PHRASE)),
       "one two three"
-    );
-    await tester.pump();
+    ); await tester.pump();
     
+    expect(keyField.controller?.text, "");
+
     expect(
-      find.descendant(of: find.byType(Dialog), matching: find.text(PRIVATE_KEY3)),
+      find.descendant(of: dialog, matching: find.textContaining(LABEL_PRIVATE_KEY_HINT)),
       findsNothing
     );
 
-    //
-    // valid passphrase
-    //
-    await tester.enterText(
-      find.descendant(of: find.byType(Dialog), matching: find.byKey(KEY_MNEMONIC_PHRASE)),
-      LABEL_MNEMONIC_PHRASE_HINT
-    );
-    await tester.pump();
-    
     expect(
-      find.descendant(of: find.byType(Dialog), matching: find.text(PRIVATE_KEY3)),
+      find.descendant(of: dialog, matching: find.textContaining(LABEL_PRIVATE_KEY_MNEMONIC)),
       findsOneWidget
     );
-
   });
+
 }
