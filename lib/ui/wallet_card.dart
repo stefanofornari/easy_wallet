@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import "package:crypto_font_icons/crypto_font_icons.dart";
 
 import 'package:easy_wallet/easy_wallet.dart';
+import 'package:easy_wallet/ui/edit_private_key_dialog.dart';
 
 
 class WalletCard extends StatelessWidget {
@@ -47,16 +48,35 @@ class WalletCard extends StatelessWidget {
                               Expanded(
                                 child: Container(
                                   alignment: Alignment.bottomRight,
-                                  child: ElevatedButton(
-                                    child: const Icon(Icons.delete),
-                                    style: ElevatedButton.styleFrom(
-                                      shape: CircleBorder(),
-                                      primary: Colors.blueGrey
-                                    ),
-                                    onPressed: () {
-                                      onDelete();
-                                    }
-                                  ),
+                                  child: ButtonBar( 
+                                    buttonPadding: EdgeInsets.all(0),
+                                    children: <Widget>[
+                                      InkWell(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Container(
+                                          width: 36,
+                                          height: 36,
+                                          alignment: Alignment.center,
+                                          child: const Icon(Icons.lock_open),
+                                        ),
+                                        onTap: () {
+                                          _showEditPrivateKeyDialog(context);
+                                        },
+                                      ),
+                                      InkWell(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Container(
+                                          width: 36,
+                                          height: 36,
+                                          alignment: Alignment.center,
+                                          child: const Icon(Icons.delete),
+                                        ),
+                                        onTap: () {
+                                          onDelete();
+                                        },
+                                      ),
+                                    ]
+                                  )
                                 )
                               )
                             ]
@@ -136,6 +156,17 @@ class WalletCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<String> _showEditPrivateKeyDialog(BuildContext context) async {
+    
+    String result = await showDialog(
+      context: context,
+      builder: (context) {
+        return EditPrivateKeyDialog(wallet);
+    });
+
+    return result;
   }
 
 }

@@ -22,6 +22,23 @@ void main() {
     configFile.writeAsStringSync("{}");
   });
 
+  testWidgets('UI elements', (WidgetTester tester) async {
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
+
+    home.state.controller + EasyWallet(WALLET1);
+    await tester.pumpAndSettle();
+
+    var card = find.byKey(Key(WALLET1));
+    expect(
+      find.descendant(of: card, matching: find.byIcon(Icons.delete)), 
+      findsOneWidget
+    );
+    expect(
+      find.descendant(of: card, matching: find.byIcon(Icons.lock_open)), 
+      findsOneWidget
+    );
+  });
+
   testWidgets('delete card action', (WidgetTester tester) async {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
@@ -29,11 +46,24 @@ void main() {
     await tester.pumpAndSettle();
 
     var button = find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byIcon(Icons.delete));
-    expect(button, findsOneWidget);
-
+    
     await tester.tap(button);
     await tester.pumpAndSettle();
 
     expect(find.byType(Card), findsNothing);
+  });
+
+  testWidgets('private key button tap opens the edit parivate key dialog', (WidgetTester tester) async {
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
+
+    home.state.controller + EasyWallet(WALLET1);
+    await tester.pumpAndSettle();
+
+    var button = find.descendant(of: find.byKey(Key(WALLET1)), matching: find.byIcon(Icons.lock_open));
+    
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Dialog), findsOneWidget);
   });
 }

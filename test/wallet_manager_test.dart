@@ -18,18 +18,18 @@ void main() {
   });
 
   test('get wallet balance', () async {
-    EasyWallet w = EasyWallet(ADDRESS3);
+    EasyWallet w = EasyWallet(ADDRESS4);
     WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTID1");
 
     wm.argsMap = {
-      ADDRESS3: "0x7baa706cf4a4220055045",
-      ADDRESS4: "0x647DC0901C745DB420913"
+      ADDRESS4: "0x7baa706cf4a4220055045",
+      ADDRESS5: "0x647DC0901C745DB420913"
     };
 
     await wm.balance(w);
     expect(w.balance, BigDecimal.parse("9343922000069000000000069"));
 
-    w = EasyWallet(ADDRESS4);
+    w = EasyWallet(ADDRESS5);
     await wm.balance(w);
     expect(w.balance, BigDecimal.parse("7592901870686660123035923"));
   });
@@ -38,7 +38,7 @@ void main() {
     WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECT/SocketException");
 
     try {
-      await wm.balance(EasyWallet(ADDRESS3));
+      await wm.balance(EasyWallet(ADDRESS4));
     } on WalletException catch(e) {
       expect(e.message, ERR_NETWORK_ERROR);
       return;
@@ -50,12 +50,12 @@ void main() {
   test('turn http errors into WalletException', () async {
     WalletManageWithStub wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECT/HttpStatus/404");
     wm.argsMap = {
-      ADDRESS3: "0x7baa706cf4a4220055045",
-      ADDRESS4: "0x647DC0901C745DB420913"
+      ADDRESS4: "0x7baa706cf4a4220055045",
+      ADDRESS5: "0x647DC0901C745DB420913"
     };
 
     try {
-      await wm.balance(EasyWallet(ADDRESS3));
+      await wm.balance(EasyWallet(ADDRESS4));
     } on WalletException catch(e) {
       expect(e.message, ERR_CONTENT_ERROR);
       return;

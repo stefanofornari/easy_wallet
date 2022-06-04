@@ -1,4 +1,3 @@
-import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/resources/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -19,12 +18,10 @@ class AddWalletDialog extends StatefulWidget {
 
 class _AddWalletDialogState extends State<AddWalletDialog> {
   final WalletListController listController;
+  final WalletEditingController walletController = WalletEditingController();
+  AddWalletBy? _addWalletBy = AddWalletBy.address;
 
   _AddWalletDialogState(this.listController) {}
-
-  final WalletEditingController walletController = WalletEditingController();
-
-  AddWalletBy? _addWalletBy = AddWalletBy.address;
 
   @override
   void initState() {

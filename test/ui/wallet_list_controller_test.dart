@@ -40,7 +40,7 @@ void main() {
       KEY_CFG_APPKEY: 
     configFile.writeAsStringSync(json.encoder.convert(ew.preferences));
 
-    wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTKEY1");;
+    wm = WalletManageWithStub("https://a.endpoint.io/v3/PROJECTKEY1");
     C = WalletListController();
     wm.argsMap = {
       "0x" + W1: "0xffaffaa4",
