@@ -96,7 +96,7 @@ void main() {
     expect(find.text(LABEL_PRIVATE_KEY_HINT), findsNothing);
   });
 
-  testWidgets('close add wallet dialog by cancel', (WidgetTester tester) async {
+  testWidgets('cancel closes add wallet dialog', (WidgetTester tester) async {
     await _showDialog(tester);
     expect(find.byType(Dialog), findsOneWidget);
     await tester.tap(find.descendant(

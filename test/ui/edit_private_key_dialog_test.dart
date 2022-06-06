@@ -23,10 +23,9 @@ void main() {
     home.state.controller + wallet;
     tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
 
-    var button = find.descendant(of: find.byKey(Key(ADDRESS3.substring(2))), matching: find.byIcon(Icons.lock_open));
-    
-    await tester.tap(button);
-    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(of: find.byKey(Key(ADDRESS3.substring(2))), matching: find.byIcon(Icons.lock_open))
+    ); await tester.pumpAndSettle();
 
     return find.byType(Dialog);
   }
@@ -85,6 +84,18 @@ void main() {
     expect(btnok.enabled, isTrue);
   });
 
+  testWidgets('valid mnemonic phrase derives the proper private key', (WidgetTester tester) async {
+    var dialog  = await _showDialog(tester);
+    
+    var textField = find.descendant(of: dialog, matching: find.byKey(KEY_MNEMONIC_PHRASE));
+    await tester.enterText(
+      textField,
+      LABEL_MNEMONIC_PHRASE_HINT
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.descendant(of: dialog, matching: find.textContaining(PRIVATE_KEY3)), findsOneWidget);
+  });
 
   testWidgets('close the dialog when pressing ok', (WidgetTester tester) async {
     var dialog = await _showDialog(tester);

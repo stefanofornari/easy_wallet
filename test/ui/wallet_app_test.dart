@@ -36,7 +36,7 @@ void main() {
 
   });
 
-  testWidgets('show add wallet dialog', (WidgetTester tester) async {
+  testWidgets('tapping + shows add wallet dialog', (WidgetTester tester) async {
     await tester.pumpWidget(EasyWalletApp());
 
     var button = find.byKey(KEY_ADD_WALLET);
@@ -134,6 +134,73 @@ void main() {
     );
     expect(config["wallets"].length, 1);
     expect(config["wallets"][0]["address"], WALLET1);
+  });
+
+  testWidgets('setting the private key updates the configuration', (WidgetTester tester) async {
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
+    home.state.controller + EasyWallet(ADDRESS1.substring(2));
+    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pumpAndSettle();
+
+    //
+    // open the edit private key dialog
+    //
+    await tester.tap(
+      find.descendant(of: find.byKey(Key(ADDRESS1.substring(2))), matching: find.byIcon(Icons.lock_open))
+    ); await tester.pumpAndSettle();
+
+    //
+    // Edit the private key
+    //
+    await tester.enterText(find.byKey(KEY_PRIVATE_KEY), PRIVATE_KEY1);
+    await tester.pump();
+
+    //
+    // press OK
+    //
+    await tester.tap(
+      find.descendant(of: find.byType(Dialog), matching: find.text("OK"))
+    ); await tester.pumpAndSettle();
+
+    ew.readPreferences();
+    expect(ew.preferences.wallets.length, 1);
+    expect(ew.preferences.wallets[0].address, ADDRESS1.substring(2));
+    expect(ew.preferences.wallets[0].privateKey, PRIVATE_KEY1);
+    expect(ew.preferences.wallets[0].mnemonic, "");  
+  });
+
+  testWidgets('setting the mnemonic phrase key updates the configuration', (WidgetTester tester) async {
+    EasyWalletHomePage home = await givenWlalletManagerStub(tester);
+    home.state.controller + EasyWallet(ADDRESS3.substring(2));
+    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pumpAndSettle();
+
+    //
+    // open the edit private key dialog
+    //
+    await tester.tap(
+      find.descendant(of: find.byKey(Key(ADDRESS3.substring(2))), matching: find.byIcon(Icons.lock_open))
+    ); await tester.pumpAndSettle();
+
+    //
+    // Edit the mnemonic phrase
+    //
+    await tester.enterText(
+      find.byKey(KEY_MNEMONIC_PHRASE), 
+      LABEL_MNEMONIC_PHRASE_HINT
+    );
+    await tester.pumpAndSettle();
+
+    //
+    // press OK
+    //
+    await tester.tap(
+      find.descendant(of: find.byType(Dialog), matching: find.text("OK"))
+    ); await tester.pumpAndSettle();
+
+    ew.readPreferences();
+    expect(ew.preferences.wallets.length, 1);
+    expect(ew.preferences.wallets[0].address, ADDRESS3.substring(2));
+    expect(ew.preferences.wallets[0].privateKey, PRIVATE_KEY3);
+    expect(ew.preferences.wallets[0].mnemonic, LABEL_MNEMONIC_PHRASE_HINT);
   });
   
 }

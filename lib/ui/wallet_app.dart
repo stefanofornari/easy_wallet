@@ -126,9 +126,13 @@ class _EasyWalletState extends State<EasyWalletHomePage> {
 
     for (var wallet in controller.value) {
       cards.add(
-        WalletCard(wallet, () {
-          controller - wallet.address;
-          setState(() {});
+        WalletCard(wallet, (WalletAction action) {
+          if (action == WalletAction.delete) {
+            controller - wallet.address;
+            setState(() {});
+          } else if (action == WalletAction.update) {
+            controller.updateWallet(wallet);
+          }
         })
       );
     }

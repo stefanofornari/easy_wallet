@@ -4,13 +4,15 @@ import "package:crypto_font_icons/crypto_font_icons.dart";
 import 'package:easy_wallet/easy_wallet.dart';
 import 'package:easy_wallet/ui/edit_private_key_dialog.dart';
 
+enum WalletAction { delete, update }
+
 
 class WalletCard extends StatelessWidget {
 
   final EasyWallet wallet;
-  final Function onDelete;
+  final Function onUpdate;
 
-  WalletCard(this.wallet, this.onDelete) : super (
+  WalletCard(this.wallet, this.onUpdate) : super (
     key: Key(wallet.address),    
   ) { }
 
@@ -72,7 +74,7 @@ class WalletCard extends StatelessWidget {
                                           child: const Icon(Icons.delete),
                                         ),
                                         onTap: () {
-                                          onDelete();
+                                          onUpdate(WalletAction.delete);
                                         },
                                       ),
                                     ]
@@ -165,6 +167,8 @@ class WalletCard extends StatelessWidget {
       builder: (context) {
         return EditPrivateKeyDialog(wallet);
     });
+
+    onUpdate(WalletAction.update);
 
     return result;
   }

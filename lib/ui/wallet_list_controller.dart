@@ -17,7 +17,7 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
 
   WalletListController operator +(EasyWallet wallet) {
     value.add(wallet);
-    walletManager.balance(wallet).whenComplete(() => notifyListeners());
+    walletManager.balance(wallet).whenComplete(() => notifyListeners());  // TODO: remove notifyListener
 
     _savePreferences();
     
@@ -25,21 +25,31 @@ class WalletListController extends ValueNotifier<List<EasyWallet>> {
   }
 
   WalletListController operator -(String address) {
-    final int l = value.length;
+    final int len = value.length;
     value.removeWhere((e) {
       return (e.address == address);
     });
 
-    if (value.length != l) {
+    if (value.length != len) {
       _savePreferences();
     }
 
     return this;
   }
 
+  void updateWallet(EasyWallet wallet) {
+    for (int i=0; i<value.length; ++i) {
+      if (value[i].address == wallet.address) {
+        value[i] = wallet;
+        break;
+      }
+    }
+    _savePreferences();
+  }
+
   Future<void> retrieveBalance() async {
     for (EasyWallet w in value) {
-      await walletManager.balance(w); notifyListeners();
+      await walletManager.balance(w); notifyListeners(); // TODO: remove notifyListener
     }
   }
 

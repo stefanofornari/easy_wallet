@@ -12,6 +12,8 @@ const String KEY_CFG_ENDPOINT = "endpoint";
 const String KEY_CFG_APPKEY = "appkey";
 const String KEY_CFG_WALLETS = "wallets";
 const String KEY_CFG_WALLET_ADDRESS = "address";
+const String KEY_CFG_WALLET_PRIVATE_KEY = "privateKey";
+const String KEY_CFG_WALLET_MNEMONIC = "mnemonicPhrase";
 
 const String LABEL_ADDRESS = "Insert the 20 hex bytes public address:";
 const String LABEL_ADDRESS_HINT = "eg: 00000000219ab540356cBB839Cbe05303d7705Fa";

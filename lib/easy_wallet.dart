@@ -6,6 +6,8 @@ class EasyWallet {
   final String address;
 
   BigDecimal balance;
+  String privateKey = "";
+  String mnemonic = "";
 
   EasyWallet(this.address) : balance = BigDecimal.parse("0.0");
 

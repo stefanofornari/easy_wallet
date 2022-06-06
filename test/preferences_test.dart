@@ -25,14 +25,17 @@ void main() {
 
     p.endpoint = "endpoint";
     p.appkey = "appkey";
-
+    
     p.wallets = [
       EasyWallet("wallet1")
     ];
-    expect(json.encoder.convert(p), '{"endpoint":"endpoint","appkey":"appkey","wallets":[{"address":"wallet1"}]}');
+    p.wallets[0].privateKey = "privatekey1";
+    expect(json.encoder.convert(p), '{"endpoint":"endpoint","appkey":"appkey","wallets":[{"address":"wallet1","privateKey":"privatekey1","mnemonicPhrase":""}]}');
 
     p.wallets.add(EasyWallet("wallet2"));
-    expect(json.encoder.convert(p), '{"endpoint":"endpoint","appkey":"appkey","wallets":[{"address":"wallet1"},{"address":"wallet2"}]}');
+    p.wallets[1].privateKey = "privatekey2";
+    p.wallets[1].mnemonic = "mnemonic2";
+    expect(json.encoder.convert(p), '{"endpoint":"endpoint","appkey":"appkey","wallets":[{"address":"wallet1","privateKey":"privatekey1","mnemonicPhrase":""},{"address":"wallet2","privateKey":"privatekey2","mnemonicPhrase":"mnemonic2"}]}');
   });
 
   test('deserialize preferences', () {
@@ -47,10 +50,33 @@ void main() {
     //
     // some values
     //
-    p = Preferences.fromJson('{"endpoint":"an endpoint","appkey":"an appkey","wallets":[{"address":"a wallet"}]}');
+    p = Preferences.fromJson('{"endpoint":"an endpoint","appkey":"an appkey","wallets":[{"address":"a wallet","privateKey":"privatekey","mnemonicPhrase":"mnemonicphrase"}]}');
     expect(p.endpoint, "an endpoint"); 
     expect(p.appkey, "an appkey");
-    expect(p.wallets.length, 1); expect(p.wallets[0].address, "a wallet");
+    expect(p.wallets.length, 1); 
+    expect(p.wallets[0].address, "a wallet");
+    expect(p.wallets[0].privateKey, "privatekey");
+    expect(p.wallets[0].mnemonic, "mnemonicphrase");
+
+    //
+    // empty private key, missing mnemonic
+    //
+    p = Preferences.fromJson('{"endpoint":"an endpoint","appkey":"an appkey","wallets":[{"address":"a wallet","privateKey":""}]}');
+    expect(p.endpoint, "an endpoint"); 
+    expect(p.appkey, "an appkey");
+    expect(p.wallets[0].address, "a wallet");
+    expect(p.wallets[0].privateKey, "");
+    expect(p.wallets[0].mnemonic, "");
+
+    //
+    // missing private key, empty mnemonic
+    //
+    p = Preferences.fromJson('{"endpoint":"an endpoint","appkey":"an appkey","wallets":[{"address":"a wallet","mnemonic":""}]}');
+    expect(p.endpoint, "an endpoint"); 
+    expect(p.appkey, "an appkey");
+    expect(p.wallets[0].address, "a wallet");
+    expect(p.wallets[0].privateKey, "");
+    expect(p.wallets[0].mnemonic, "");
   });
 
   test('deserialize preferences with missing values', () {

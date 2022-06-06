@@ -17,7 +17,7 @@ class EditPrivateKeyDialog extends StatefulWidget {
 class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
   final EasyWallet wallet;
   final WalletEditingController keyController = WalletEditingController();
-  final MnemonicEditingController passphraseController = MnemonicEditingController();
+  final MnemonicEditingController mnemonicController = MnemonicEditingController();
 
   _EditPrivateKeyDialogState(this.wallet);
 
@@ -25,14 +25,14 @@ class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
   void initState() {
     super.initState();
     keyController.clear();
-    passphraseController.clear();
+    mnemonicController.clear();
   }
 
   @override
   void dispose() {
     super.dispose();
     keyController.dispose();
-    passphraseController.dispose();
+    mnemonicController.dispose();
   }
 
   @override
@@ -46,7 +46,7 @@ class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
                   Text(LABEL_MNEMONIC_PHRASE),
                   TextField(
                     key: KEY_MNEMONIC_PHRASE,
-                    controller: passphraseController,
+                    controller: mnemonicController,
                     onChanged: (value) {
                       _setPrivateKeyIfValidPassphrase(value);
                       setState(() {});
@@ -89,6 +89,8 @@ class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
                 TextButton(
                   child: const Text('OK'),
                   onPressed: !_validate() ? null : () {
+                    wallet.privateKey = keyController.text;
+                    wallet.mnemonic = mnemonicController.text;
                     Navigator.pop(context, "");
                   }
                 )
@@ -102,16 +104,15 @@ class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
     //
     // If the key is invalid key2adress returns an empty address...
     //
-    print("${wallet.address} == " + keyController.key2address());
     return wallet.address == keyController.key2address();
       
   }
 
   bool _isPrivateKeyEnabled() {
-    return passphraseController.value.text.isEmpty;
+    return mnemonicController.value.text.isEmpty;
   }
 
   void _setPrivateKeyIfValidPassphrase(value) {
-    keyController.text = passphraseController.privateKey(wallet.address);
+    keyController.text = mnemonicController.privateKey(wallet.address);
   }
 }

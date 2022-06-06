@@ -4,15 +4,17 @@ import 'package:easy_wallet/resources/constants.dart';
 import 'easy_wallet.dart';
 
 class _WalletPrefereces {
-  late String address;
+  late Map wallet;
 
   _WalletPrefereces(EasyWallet w) {
-    address = w.address;
+    wallet = {
+      KEY_CFG_WALLET_ADDRESS: w.address,
+      KEY_CFG_WALLET_PRIVATE_KEY: w.privateKey,
+      KEY_CFG_WALLET_MNEMONIC: w.mnemonic
+    };
   }
 
-  Map toJson() => {
-    "address": address
-  };
+  Map toJson() => wallet;
 }
 
 class Preferences {
@@ -35,7 +37,10 @@ class Preferences {
     p.appkey = jsonMap[KEY_CFG_APPKEY] ?? "";
     p.wallets = [];
     for (Map w in jsonMap[KEY_CFG_WALLETS] ?? {}) {
-      p.wallets.add(EasyWallet(w[KEY_CFG_WALLET_ADDRESS]));
+      EasyWallet wallet = EasyWallet(w[KEY_CFG_WALLET_ADDRESS]);
+      wallet.privateKey = w[KEY_CFG_WALLET_PRIVATE_KEY] ?? "";
+      wallet.mnemonic = w[KEY_CFG_WALLET_MNEMONIC] ?? "";
+      p.wallets.add(wallet);
     }
     
     return p;
@@ -52,7 +57,7 @@ class Preferences {
     for(EasyWallet w in wallets) {
       list.add(_WalletPrefereces(w));
     };
-    json["wallets"] = list;
+    json[KEY_CFG_WALLETS] = list;
 
     return json;
    }
