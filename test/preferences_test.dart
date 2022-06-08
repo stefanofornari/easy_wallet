@@ -112,4 +112,50 @@ void main() {
     expect(p.appkey, "");
     expect(p.wallets.isEmpty, true);
   });
+
+  test('map -> preferences', () {
+    Map m = {};
+
+    Preferences.fromMap(m);
+    expect(m.isEmpty, true);
+
+    //
+    // empty values
+    //
+    Preferences p = Preferences.fromMap({"endpoint":"","appkey":"","wallets":[]});
+    expect(p.endpoint, ""); 
+    expect(p.appkey, "");
+    expect(p.wallets.isEmpty, true);
+
+    //
+    // some values
+    //
+    p = Preferences.fromMap({"endpoint":"an endpoint","appkey":"an appkey","wallets":[{"address":"a wallet","privateKey":"privatekey","mnemonicPhrase":"mnemonicphrase"}]});
+    expect(p.endpoint, "an endpoint"); 
+    expect(p.appkey, "an appkey");
+    expect(p.wallets.length, 1); 
+    expect(p.wallets[0].address, "a wallet");
+    expect(p.wallets[0].privateKey, "privatekey");
+    expect(p.wallets[0].mnemonic, "mnemonicphrase");
+
+    //
+    // empty private key, missing mnemonic
+    //
+    p = Preferences.fromMap({"endpoint":"an endpoint","appkey":"an appkey","wallets":[{"address":"a wallet","privateKey":""}]});
+    expect(p.endpoint, "an endpoint"); 
+    expect(p.appkey, "an appkey");
+    expect(p.wallets[0].address, "a wallet");
+    expect(p.wallets[0].privateKey, "");
+    expect(p.wallets[0].mnemonic, "");
+
+    //
+    // missing private key, empty mnemonic
+    //
+    p = Preferences.fromMap({"endpoint":"an endpoint","appkey":"an appkey","wallets":[{"address":"a wallet","mnemonic":""}]});
+    expect(p.endpoint, "an endpoint"); 
+    expect(p.appkey, "an appkey");
+    expect(p.wallets[0].address, "a wallet");
+    expect(p.wallets[0].privateKey, "");
+    expect(p.wallets[0].mnemonic, "");
+  });
 }

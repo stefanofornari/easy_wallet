@@ -30,19 +30,21 @@ class Preferences {
   }
 
   factory Preferences.fromJson(String jsonString) {
-    Map jsonMap = json.decoder.convert(jsonString);
+    return Preferences.fromMap(json.decoder.convert(jsonString));
+  }
 
+  factory Preferences.fromMap(Map m) {
     Preferences p = Preferences();
-    p.endpoint = jsonMap[KEY_CFG_ENDPOINT] ?? "";
-    p.appkey = jsonMap[KEY_CFG_APPKEY] ?? "";
+    p.endpoint = m[KEY_CFG_ENDPOINT] ?? "";
+    p.appkey = m[KEY_CFG_APPKEY] ?? "";
     p.wallets = [];
-    for (Map w in jsonMap[KEY_CFG_WALLETS] ?? {}) {
+    for (Map w in m[KEY_CFG_WALLETS] ?? {}) {
       EasyWallet wallet = EasyWallet(w[KEY_CFG_WALLET_ADDRESS]);
       wallet.privateKey = w[KEY_CFG_WALLET_PRIVATE_KEY] ?? "";
       wallet.mnemonic = w[KEY_CFG_WALLET_MNEMONIC] ?? "";
       p.wallets.add(wallet);
     }
-    
+
     return p;
   }
 
@@ -60,5 +62,5 @@ class Preferences {
     json[KEY_CFG_WALLETS] = list;
 
     return json;
-   }
+   }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 }

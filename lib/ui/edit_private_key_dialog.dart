@@ -24,8 +24,8 @@ class _EditPrivateKeyDialogState extends State<EditPrivateKeyDialog> {
   @override
   void initState() {
     super.initState();
-    keyController.clear();
-    mnemonicController.clear();
+    keyController.text = wallet.privateKey;
+    mnemonicController.text = wallet.mnemonic;
   }
 
   @override

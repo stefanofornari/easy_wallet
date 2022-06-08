@@ -1,6 +1,6 @@
+import 'dart:convert' show json;
+
 import 'package:easy_wallet/resources/constants.dart';
-import 'package:file/file.dart';
-import 'package:file/memory.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,13 +15,23 @@ import 'testing_utils.dart';
 
 void main() {
 
-  _showDialog(WidgetTester tester) async {
+  setUp(() {
+    initConfigFile();
+
+    UTILS_TEST = true; // make sure we use the test version of utils otherwise
+                       // the operations with mnemonic phrase can take too long
+
+  });
+  
+  _showDialog(WidgetTester tester, {bool addWallet = true}) async {
     EasyWalletHomePage home = await givenWlalletManagerStub(tester);
 
-    EasyWallet wallet = EasyWallet(ADDRESS3.substring(2));
+    if (addWallet) {
+      EasyWallet wallet = EasyWallet(ADDRESS3.substring(2));
 
-    home.state.controller + wallet;
-    tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
+      home.state.controller + wallet;
+      tester.state(find.byType(EasyWalletHomePage)).setState(() {}); await tester.pump();
+    }
 
     await tester.tap(
       find.descendant(of: find.byKey(Key(ADDRESS3.substring(2))), matching: find.byIcon(Icons.lock_open))
@@ -30,18 +40,6 @@ void main() {
     return find.byType(Dialog);
   }
 
-  setUp(() {
-    ew.fs = MemoryFileSystem.test();
-    File configFile = ew.getConfigFile();
-
-    configFile.createSync(recursive: true);
-    
-    configFile.writeAsStringSync("{}");
-
-    UTILS_TEST = true; // make sure we use the test version of utils otherwise
-                       // the operations with mnemonic phrase can take too long
-
-  });
 
   testWidgets('edit private key UI', (WidgetTester tester) async {
     var dialog = await _showDialog(tester);
@@ -184,6 +182,28 @@ void main() {
       find.descendant(of: dialog, matching: find.textContaining(LABEL_PRIVATE_KEY_MNEMONIC)),
       findsOneWidget
     );
+  });
+
+  testWidgets('preload configured values', (WidgetTester tester) async {
+    initConfigFile(configuration: {
+      KEY_CFG_WALLETS: [{
+        KEY_CFG_WALLET_ADDRESS: ADDRESS3.substring(2),
+        KEY_CFG_WALLET_PRIVATE_KEY: "a private key",
+        KEY_CFG_WALLET_MNEMONIC: "a mnemonic phrase"
+      }]
+    });
+    var dialog = await _showDialog(tester, addWallet: false);
+
+    expect(
+      find.descendant(of: dialog, matching: find.textContaining("a mnemonic phrase")),
+      findsOneWidget
+    );
+
+    expect(
+      find.descendant(of: dialog, matching: find.textContaining("a private key")),
+      findsOneWidget
+    );
+
   });
 
 }

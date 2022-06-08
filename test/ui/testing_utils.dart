@@ -1,14 +1,18 @@
+import 'package:file/file.dart';
+import 'package:file/memory.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:easy_wallet/main.dart';
+import 'package:easy_wallet/main.dart' as ew;
+import 'package:easy_wallet/preferences.dart';
 import 'package:easy_wallet/ui/wallet_app.dart';
 
 import '../testing_constants.dart';
 import '../stubs/wallet_manager_stub.dart';
 
 Future<EasyWalletHomePage> givenWlalletManagerStub(WidgetTester tester) async {
-  readPreferences();
+  ew.readPreferences();
   await tester.pumpWidget(EasyWalletApp());
     
   //
@@ -41,4 +45,14 @@ bool findTextInCard(WidgetTester tester, Key key, String text) {
   }
 
   return false;
+}
+
+void initConfigFile({Map configuration = const {}}) {
+  ew.fs = MemoryFileSystem.test();
+  File configFile = ew.getConfigFile();
+
+  configFile.createSync(recursive: true);
+    
+  ew.preferences = Preferences.fromMap(configuration);
+  ew.savePreferences();
 }
